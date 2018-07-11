@@ -3,7 +3,7 @@
 %define pylibdir /usr/%{_lib}/python%{pybasever}/site-packages
 
 Name:		python36-urllib3
-Version:	1.23
+Version:	1.22
 Release:	1%{?dist}
 Summary:	HTTP library with thread-safe connection pooling, file post, and more.
 
