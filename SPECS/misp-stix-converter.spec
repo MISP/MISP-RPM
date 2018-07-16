@@ -1,17 +1,21 @@
+%define pymajorver 3
+%define pybasever 3.6
+%define pylibdir /usr/%{_lib}/python%{pybasever}/site-packages
+
 Name:		misp-stix-converter
-Version:	0.2.10
-Release:	1%{?dist}
-Summary:    MISP to STIX and back again
+Version:    0.2.10
+Release:	2%{?dist}
+Summary:	MISP to STIX and back again
 
 Group:		Development/Languages
-License:	GPLv3
+License:	BSD License
 URL:		https://github.com/MISP/MISP-STIX-Converter
 Source0:	fake-tgz.tgz
+Buildarch:  noarch
 
-BuildArch:  noarch
-BuildRequires:	python34-devel, python34-setuptools, git
-BuildRequires:  python34-pip
-Requires:	python34, python34-pip
+BuildRequires:  python36, python36-devel, python36-setuptools	
+BuildRequires:  git
+Requires:	    python36
 
 %description
 MISP to STIX and back again
@@ -20,7 +24,7 @@ MISP to STIX and back again
 %setup -q -n fake-tgz
 
 %build
-# intentianally left empty
+#intentionally left blank
 
 %install
 git clone https://github.com/MISP/MISP-STIX-Converter
@@ -28,11 +32,11 @@ cd MISP-STIX-Converter
 python3 setup.py install --root=$RPM_BUILD_ROOT
 
 %files
-/usr/lib/python3.4/site-packages/misp_stix_converter-%{version}-py3.4.egg-info
-/usr/lib/python3.4/site-packages/misp_stix_converter
-/usr/bin/misp-to-stix.py
-/usr/bin/stix-to-misp.py
+%{_bindir}/misp-to-stix.py
+%{_bindir}/stix-to-misp.py
+%{pylibdir}/misp_stix_converter
+%{pylibdir}/misp_stix_converter-%{version}-py%{pybasever}.egg-info
 
 %changelog
-* Fri Oct 20 2017 Andreas Muehlemann <andreas.muehlemann@switch.ch> - 1.0
-- first version
+* Wed Jul 11 2018 Andreas Muehlemann <andreas.muehlemann@switch.ch> - 0.2.10
+- first version for python36
