@@ -5,40 +5,42 @@
 # disable mangling of shebangs #!
 %define __brp_mangle_shebangs /usr/bin/true
 
-%define pymispver 2.4.148.1
+%define mispver 2.4.155
+%define phprpm php73
+%define pyrpm python38
+%define phpbrotliver 0.13.1
 
 Name:		misp
-Version:	2.4.150
+Version:	%{mispver}
 Release: 	4%{?dist}
 Summary:	MISP - malware information sharing platform
 
 Group:		Internet Applications
 License:	GPLv3
 URL:		http://www.misp-project.org/
-Source0:	fake-tgz.tgz
-Source1:        misp.conf
-Source2:        misp-httpd.pp
-Source3:        misp-bash.pp
-Source4:        misp-ps.pp
-Source5:        misp-workers.service
-Source6:        start-misp-workers.sh
-Patch0:         MISP-Server.php.patch
+Source1:        misp-httpd.pp
+Source2:        misp-bash.pp
+Source3:        misp-ps.pp
+Source4:        misp-workers.service
 
-BuildRequires:	/usr/bin/pathfix.py
-BuildRequires:	git, python3-devel, python3-pip, libxslt-devel, zlib-devel
-BuildRequires:	php74-php, php74-php-cli, php74-php-xml, php74-php-mbstring
-BuildRequires:	ssdeep-devel, cmake3, bash-completion
+#BuildRequires:	/usr/bin/pathfix.py
+BuildRequires:	git, rh-%{pyrpm}-python-devel, rh-%{pyrpm}-python-pip, libxslt-devel, zlib-devel
+BuildRequires:	rh-%{phprpm}-php, rh-%{phprpm}-php-cli, rh-%{phprpm}-php-xml, rh-%{phprpm}-php-mbstring
+BuildRequires:  rh-%{phprpm}-php-pear, rh-%{phprpm}-php-devel
+BuildRequires:  ssdeep-libs, ssdeep-devel
+BuildRequires:  librdkafka librdkafka-devel
+BuildRequires:	cmake3, bash-completion
 BuildRequires:	libcaca-devel
 
-Requires:	httpd, mod_ssl, redis, libxslt, zlib
-Requires:	MariaDB > 10.3, MariaDB-server > 10.3
-Requires:	python3, misp-python-virtualenv
-Requires:	php74-php, php74-php-cli, php74-php-gd, php74-php-pdo
-Requires:	php74-php-mysqlnd, php74-php-mbstring, php74-php-xml
-Requires:       php74-php-bcmath, php74-php-opcache, php74-php-json
-Requires:       php74-php-pecl-zip, php74-php-pecl-redis5, php74-php-intl
-Requires:       php74-php-pecl-gnupg, php74-php-pecl-ssdeep
-Requires:	php74-php-brotli, php74-php-pecl-rdkafka
+Requires:	httpd24, httpd24-mod_ssl, rh-redis6-redis, libxslt, zlib
+Requires:	rh-mariadb105-mariadb
+Requires:	rh-%{pyrpm}-python, misp-python-virtualenv
+Requires:	rh-%{phprpm}-php, rh-%{phprpm}-php-cli, rh-%{phprpm}-php-gd, rh-%{phprpm}-php-pdo
+Requires:	rh-%{phprpm}-php-mysqlnd, rh-%{phprpm}-php-mbstring, rh-%{phprpm}-php-xml
+Requires:       rh-%{phprpm}-php-bcmath, rh-%{phprpm}-php-opcache, rh-%{phprpm}-php-json
+Requires:       rh-%{phprpm}-php-zip, misp-pecl-redis, rh-php73-php-intl
+Requires:       misp-pear-crypt-gpg, misp-pecl-ssdeep, ssdeep-libs
+Requires:	misp-php-brotli, misp-pecl-rdkafka
 Requires:	gtcaca faup
 
 %package python-virtualenv
@@ -48,6 +50,46 @@ License:        GPLv3
 
 %description python-virtualenv
 The python vitualenvironment for MISP
+
+%package pecl-redis
+Summary:        PECL redis extension
+Group:          Internet Applications
+License:        GPLv3
+
+%description pecl-redis
+The PECL redis extension
+
+%package pecl-ssdeep
+Summary:        PECL ssdeep extension
+Group:          Internet Applications
+License:        GPLv3
+
+%description pecl-ssdeep
+The PECL ssdeep extension
+
+%package pear-crypt-gpg
+Summary:        PEAR Crypt_GPG extension
+Group:          Internet Applications
+License:        GPLv3
+
+%description pear-crypt-gpg
+The PEAR redis extension
+
+%package php-brotli
+Summary:        Brotli upstream PHP extension
+Group:          Internet Applications
+License:        GPLv3
+
+%description php-brotli
+Brotli upstream PHP extension
+
+%package pecl-rdkafka
+Summary:        PECL rdkafka extension
+Group:          Internet Applications
+License:        GPLv3
+
+%description pecl-rdkafka
+The PECL rdkafka extension
 
 %description
 MISP - malware information sharing platform
@@ -61,113 +103,144 @@ intelligence, financial fraud information, vulnerability information or
 even counter-terrorism information. 
 
 %prep
-%setup -q -n fake-tgz
 
 %build
 # intentionally left blank
 
 %install
-mkdir -p $RPM_BUILD_ROOT/var/www
-git clone https://github.com/MISP/MISP.git $RPM_BUILD_ROOT/var/www/MISP
-cd $RPM_BUILD_ROOT/var/www/MISP
+# selinux policies
+mkdir -p $RPM_BUILD_ROOT/usr/share/MISP/policy/selinux
+install -m 644 %{_topdir}/../%{SOURCE1} $RPM_BUILD_ROOT/usr/share/MISP/policy/selinux/
+install -m 644 %{_topdir}/../%{SOURCE2} $RPM_BUILD_ROOT/usr/share/MISP/policy/selinux/
+install -m 644 %{_topdir}/../%{SOURCE3} $RPM_BUILD_ROOT/usr/share/MISP/policy/selinux/
 
-git submodule sync
-git submodule update --init --recursive
-git submodule foreach --recursive git config core.filemode false
-git config core.filemode false
-
-# patch app/Model/Server.php to show commit ID
-patch --ignore-whitespace -p0 < %{PATCH0}
-
-# create python3 virtualenv
-python3 -m venv --copies $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv
+# misp-workers.service
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/systemd/system
+install -m 644 %{_topdir}/../%{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/systemd/system
 
 mkdir -p $RPM_BUILD_ROOT/usr/share/httpd/.cache
 
-$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U pip setuptools
+mkdir -p $RPM_BUILD_ROOT/var/www
 
-cd $RPM_BUILD_ROOT/var/www/MISP/app/files/scripts/python-cybox
-git config core.filemode false
-$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install .
+# pecl - redis
+echo '' | sudo /opt/rh/rh-%{phprpm}/root/usr/bin/pecl install -f redis
+mkdir -p $RPM_BUILD_ROOT/opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules
+cp {,$RPM_BUILD_ROOT}/opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules/redis.so
 
-cd $RPM_BUILD_ROOT/var/www/MISP/app/files/scripts/python-stix
-git config core.filemode false
-$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install .
+# pecl - ssdeep
+# ssdeep hard codes /usr/lib for libfuzzy.so
+sudo ln -sf /usr/lib64/libfuzzy.so /usr/lib/libfuzzy.so
+echo '' | sudo /opt/rh/rh-%{phprpm}/root/usr/bin/pecl install -f ssdeep
+mkdir -p $RPM_BUILD_ROOT/opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules
+cp {,$RPM_BUILD_ROOT}/opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules/ssdeep.so
 
-cd $RPM_BUILD_ROOT/var/www/MISP/app/files/scripts/mixbox
-git config core.filemode false
-$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install .
+# pear - Crypt_GPG
+echo '' | sudo /opt/rh/rh-%{phprpm}/root/usr/bin/pear install -f Crypt_GPG
+mkdir -p $RPM_BUILD_ROOT/opt/rh/rh-%{phprpm}/root/usr/share/pear-data
+mkdir -p $RPM_BUILD_ROOT/opt/rh/rh-%{phprpm}/root/usr/share/pear
+cp -r /opt/rh/rh-%{phprpm}/root/usr/share/pear-data/Crypt_GPG $RPM_BUILD_ROOT/opt/rh/rh-%{phprpm}/root/usr/share/pear-data/
+cp -r /opt/rh/rh-%{phprpm}/root/usr/share/pear/Crypt $RPM_BUILD_ROOT/opt/rh/rh-%{phprpm}/root/usr/share/pear/
 
-cd $RPM_BUILD_ROOT/var/www/MISP/app/files/scripts/cti-python-stix2
-git config core.filemode false
-$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install .
+# upstream brotli
+git clone -b %{phpbrotliver} --depth 1 https://github.com/kjdev/php-ext-brotli $RPM_BUILD_ROOT/var/tmp/php-ext-brotli
+pushd $RPM_BUILD_ROOT/var/tmp/php-ext-brotli
+git submodule sync
+git submodule update --init --recursive
+/opt/rh/rh-%{phprpm}/root/usr/bin/phpize
+./configure --with-php-config=/opt/rh/rh-%{phprpm}/root/usr/bin/php-config
+make
+mkdir -p $RPM_BUILD_ROOT/opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules
+# remove path from symbols so that check-buildroot doesn't complain
+strip --strip-debug modules/brotli.so
+cp modules/brotli.so $RPM_BUILD_ROOT/opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules/brotli.so
+popd
+# and cleanup any trace to make check-buildroot happy (again) ...
+rm -rf $RPM_BUILD_ROOT/var/tmp/php-ext-brotli
 
-cd $RPM_BUILD_ROOT/var/www/MISP/app/files/scripts/python-maec
-git config core.filemode false
-$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install .
+# pecl - rdkafka
+echo '' | sudo /opt/rh/rh-%{phprpm}/root/usr/bin/pecl install -f rdkafka
+mkdir -p $RPM_BUILD_ROOT/opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules
+cp {,$RPM_BUILD_ROOT}/opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules/rdkafka.so
 
+git clone -b v%{mispver} --depth 1 https://github.com/MISP/MISP.git $RPM_BUILD_ROOT/var/www/MISP
 
-$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U zmq
-$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U redis
-$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U python-magic
-$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U plyara
-$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U pydeep
-$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U lief
+pushd $RPM_BUILD_ROOT/var/www/MISP
+	git submodule sync
+	git submodule update --init --recursive
+	git submodule foreach --recursive git config core.filemode false
+	git config core.filemode false
+popd
 
-cd $RPM_BUILD_ROOT/var/www/MISP/PyMISP
-$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U .
+# create python3 virtualenv
+/opt/rh/rh-%{pyrpm}/root/usr/bin/python3 -m venv --copies $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv
+
+$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U pip setuptools wheel
+
+for pymod in python-cybox python-stix mixbox cti-python-stix2 python-maec; do
+	$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install $RPM_BUILD_ROOT/var/www/MISP/app/files/scripts/$pymod
+done
+
+for pymod in zmq redis python-magic plyara pydeep lief; do
+	$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U $pymod
+done
+
+$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U $RPM_BUILD_ROOT/var/www/MISP/PyMISP
+
+# virtualenv PATH mess fixup
+rm -rf $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/__pycache__
+find $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv -name 'direct_url.json' -type f -delete
+
+sed -i -r -e 's@#!/.*python3@/var/www/cgi-bin/misp-virtualenv/bin/python3@' $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/*
+sed -i -r -e 's@(VIRTUAL_ENV[= ])"(.*/var/www/cgi-bin/misp-virtualenv)"@\1"/var/www/cgi-bin/misp-virtualenv"@' $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/activate*
+# EO python setup
 
 # CakePHP
-cd $RPM_BUILD_ROOT/var/www/MISP/app
-/opt/remi/php74/root/usr/bin/php composer.phar install
-
-cd $RPM_BUILD_ROOT/var/www/MISP
-# save commit ID of this installation
-git rev-parse HEAD > .git_commit_version
-
-# clean up before PATH rewriting
-rm -rf $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/__pycache__
-
-# rewrite PATH in virtualenv
-sed -e "s/\/usr\/local\/bin\/python3.6/\/var\/www\/cgi-bin\/misp-virtualenv\/bin\/python3/g" -i $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/*
-sed -e "s/\/builddir\/build\/BUILDROOT\/%{name}-%{version}-%{release}.%{_arch}//g" -i $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/*
-sed -e "s/\/builddir\/build\/BUILDROOT\/%{name}-%{version}-%{release}.%{_arch}//g" -i $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/lib/python3.6/site-packages/pymisp-%{pymispver}.dist-info/direct_url.json
-
-# path fix for python3
-pathfix.py -pni "%{__python3} %{py3_shbang_opts}" . $RPM_BUILD_ROOT/var/www/MISP/*
+pushd $RPM_BUILD_ROOT/var/www/MISP/app
+	/opt/rh/rh-%{phprpm}/root/usr/bin/php composer.phar install
+popd
 
 # cleanup
-rm -rf .git .github .gitchangelog.rc .gitignore .gitmodules .travis.yml
-find . -name \.git | xargs -i rm -rf {}
+find $RPM_BUILD_ROOT/var/www/ \
+	   -name '.git' \
+	-o -name '.github' \
+	-o -name '.gitignore' \
+	-o -name '.gitmodules' \
+	-o -name '.travis.yml' \
+	-print0 | xargs -0 rm -rf
 
-mkdir -p $RPM_BUILD_ROOT/etc/httpd/conf.d
-install -m 644 %{SOURCE1} $RPM_BUILD_ROOT/etc/httpd/conf.d/
-mkdir -p $RPM_BUILD_ROOT/usr/share/MISP/policy/selinux
-install -m 644 %{SOURCE2} $RPM_BUILD_ROOT/usr/share/MISP/policy/selinux/
-install -m 644 %{SOURCE3} $RPM_BUILD_ROOT/usr/share/MISP/policy/selinux/
-install -m 644 %{SOURCE4} $RPM_BUILD_ROOT/usr/share/MISP/policy/selinux/
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/systemd/system
-install -m 644 %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/systemd/system
-mkdir -p $RPM_BUILD_ROOT/usr/local/sbin
-install -m 755 %{SOURCE6} $RPM_BUILD_ROOT/usr/local/sbin
 chmod g+w $RPM_BUILD_ROOT/var/www/MISP/app/Config
 
 %files python-virtualenv
 %defattr(-,apache,apache,-)
 /var/www/cgi-bin/misp-virtualenv
 
+# TODO "extension=redis.so" to php.ini
+%files pecl-redis
+/opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules/redis.so
+
+# TODO "extension=ssdeep.so" to php.ini
+%files pecl-ssdeep
+/opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules/ssdeep.so
+
+%files pear-crypt-gpg
+/opt/rh/rh-php73/root/usr/share/pear/Crypt
+/opt/rh/rh-php73/root/usr/share/pear-data/Crypt_GPG
+
+# TODO "extension=brotli.so" to php.ini
+%files php-brotli
+/opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules/brotli.so
+
+# TODO "extension=rdkafka.so" to php.ini
+%files pecl-rdkafka
+/opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules/rdkafka.so
+
 %files
 %defattr(-,apache,apache,-)
 %config(noreplace) /var/www/MISP/app/Plugin/CakeResque/Config/config.php
 /var/www/MISP
-%config(noreplace) /etc/httpd/conf.d/misp.conf
+%defattr(-,root,root,-)
 /usr/share/MISP/policy/selinux/misp-*.pp
 %{_sysconfdir}/systemd/system/misp-workers.service
-%defattr(-,root,root,-)
-/usr/local/sbin/start-misp-workers.sh
-%exclude %{_libdir}/debug
-%exclude /usr/lib/debug/.build-id
-%exclude /usr/lib/debug/var/www/MISP/PyMISP/tests/viper-test-files/test_files/tmux.debug
 # exclude test files whicht get detected by AV solutions
 %exclude /var/www/MISP/PyMISP/tests
 
@@ -206,6 +279,9 @@ semodule -i /usr/share/MISP/policy/selinux/misp-bash.pp
 semodule -i /usr/share/MISP/policy/selinux/misp-ps.pp
 
 %changelog
+* Thu May 12 2022 Rémi Laurent <remi.laurent@securitymadein.lu> - 2.4.155
+- update to 2.4.155 and RHEL 7.9 packaging without external repos
+
 * Thu Oct 14 2021 Andreas Muehlemann <andreas.muehlemann@switch.ch> - 2.4.150
 - update to 2.4.150
 
