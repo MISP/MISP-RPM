@@ -229,6 +229,11 @@ sudo firewall-cmd --permanent --zone=public --add-service https
 sudo systemctl restart firewalld
 ```
 
+## Errata
+
+- need manual install of `librdkafka` for PHP rdkafka extension 
+  `sudo yum install -y librdkafka`
+
 # Upgrade
 
 Example upgrade procedure (always check upstream MISP documentation regarding
