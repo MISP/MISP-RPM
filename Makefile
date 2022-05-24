@@ -13,7 +13,7 @@ clean:
 
 %.rpm: SPECS/%.spec /usr/bin/rpmbuild /usr/bin/yum-builddep
 	if [ $@ = 'faup.rpm' ]; then \
-		sudo rpm -U RPMS/$(arch)/gtcaca-devel-*.rpm; \
+		sudo rpm -U --replacepkgs RPMS/$(arch)/gtcaca-devel-*.rpm; \
 	fi
 	sudo yum-builddep $<
 	rpmbuild --buildroot $(PWD)/BUILDROOT/ --define '_topdir .' -ba $<
