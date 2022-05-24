@@ -15,7 +15,7 @@ clean:
 	if [ $@ = 'faup.rpm' ]; then \
 		sudo rpm -U --replacepkgs RPMS/$(arch)/gtcaca-devel-*.rpm; \
 	fi
-	sudo yum-builddep $<
+	sudo yum-builddep -y $<
 	rpmbuild --buildroot $(PWD)/BUILDROOT/ --define '_topdir .' -ba $<
 
 faup.rpm: gtcaca.rpm
@@ -26,4 +26,4 @@ prepare:
 	sudo subscription-manager register --auto-attach
 	sudo yum-config-manager --enable rhel-server-rhscl-7-rpms
 	sudo subscription-manager repos --enable rhel-7-server-optional-rpms
-	sudo yum install -y scl-utils ca-certificates
+	sudo yum install -y scl-utils ca-certificates git
