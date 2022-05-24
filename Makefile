@@ -3,7 +3,7 @@
 arch=$(shell uname -p)
 
 clean:
-	rm -rf BUILD BUILDROOT RPMS
+	rm -rf BUILD BUILDROOT RPMS SRPMS
 
 /usr/bin/rpmbuild:
 	sudo yum install -y rpm-build
