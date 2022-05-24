@@ -99,6 +99,7 @@ Brotli upstream PHP extension
 Summary:        PECL rdkafka extension
 Group:          Internet Applications
 License:        GPLv3
+Requires:       librdkafka
 
 %description pecl-rdkafka
 The PECL rdkafka extension

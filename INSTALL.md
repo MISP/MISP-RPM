@@ -48,20 +48,20 @@ Set up recommended max values for PHP runtime
 Follow the install order and adapt versions if required
 ```
 # prereq for misp
-rpm -i faup-1.6+*.rpm
-rpm -i gtcaca-1.0+*.rpm
+sudo yum install -y gtcaca-1.0+*.rpm
+sudo yum install -y faup-1.6.0+*.rpm
 
 # prereq PHP extensions for misp
 export mispver="2.4.158-1"
-rpm -i misp-pear-crypt-gpg-$mispver.el7.x86_64.rpm
-rpm -i misp-pecl-rdkafka-$mispver.el7.x86_64.rpm
-rpm -i misp-pecl-redis-$mispver.el7.x86_64.rpm
-rpm -i misp-pecl-ssdeep-$mispver.el7.x86_64.rpm
-rpm -i misp-php-brotli-$mispver.el7.x86_64.rpm
-rpm -i misp-python-virtualenv-$mispver.el7.x86_64.rpm
+sudo yum install -y misp-pear-crypt-gpg-$mispver.el7.x86_64.rpm \
+  misp-pecl-rdkafka-$mispver.el7.x86_64.rpm \
+  misp-pecl-redis-$mispver.el7.x86_64.rpm \
+  misp-pecl-ssdeep-$mispver.el7.x86_64.rpm \
+  misp-php-brotli-$mispver.el7.x86_64.rpm \
+  misp-python-virtualenv-$mispver.el7.x86_64.rpm
 
 # install misp rpm
-rpm -i misp-$mispver.el7.x86_64.rpm
+sudo yum install -y misp-$mispver.el7.x86_64.rpm
 ```
 
 ## Apache/httpd configuration
@@ -123,21 +123,12 @@ sudo scl enable rh-mariadb105 'mysql -u misp -p misp' < /var/www/MISP/INSTALL/MY
 
 ## MISP configuration
 
-Setting up default bare configuration (please check MISP documentation for full
-proper setup):
-
-```
-sudo cp -a app/Config/core.default.php app/Config/core.php
-sudo cp -a app/Config/bootstrap.default.php app/Config/bootstrap.php
-sudo cp -a app/Config/config.default.php app/Config/config.php
-sudo chmod o-rwx app/Config/{config.php,database.php,email.php}
-```
-
 Configure your database access (password `changeme` should be set accordingly
 to the previous database setup phase):
 
 `/var/www/MISP/app/Config/database.php`
 ```
+<?php
 class DATABASE_CONFIG {
   public $default = array(
     'datasource' => 'Database/Mysql',
@@ -153,10 +144,21 @@ class DATABASE_CONFIG {
 }
 ```
 
+Setting up default bare configuration (please check MISP documentation for full
+proper setup):
+
+```
+sudo cp -a /var/www/MISP/app/Config/core.default.php /var/www/MISP/app/Config/core.php
+sudo cp -a /var/www/MISP/app/Config/bootstrap.default.php /var/www/MISP/app/Config/bootstrap.php
+sudo cp -a /var/www/MISP/app/Config/config.default.php /var/www/MISP/app/Config/config.php
+sudo chmod o-rwx /var/www/MISP/app/Config/{config.php,database.php,email.php}
+sudo chown apache. /var/www/MISP/app/Config/{config.php,database.php,email.php}
+```
+
 Adapt Python binary path in `/var/www/MISP/app/Config/config.php`
 
 ```
-  'python_bin' => NULL,
+  'python_bin' => null,
 ```
 
 should become (the path of the full Python Virtualenv shipped with RPMs):
@@ -182,10 +184,20 @@ sudo systemctl start misp-workers
 Note - the Systemd Unit should make use of the software collection with the
 `scl` wrapper.
 
-`/etc/systemd/system/misp-workers.service` should have a line similar to
+`/etc/systemd/system/misp-workers.service` should have lines similar to
 
 ```
-ExecStart=/usr/bin/scl enable rh-php73 /var/www/MISP/app/Console/worker/start.sh
+Environment=SCL_PHP_WRAPPER=
+EnvironmentFile=-/etc/default/misp-workers
+Type=forking
+ExecStart=/bin/bash -c '${SCL_PHP_WRAPPER} /var/www/MISP/app/Console/worker/start.sh'
+```
+
+with `/etc/default/misp-workers` optionaly loaded and containing the path to
+the scl wrapper
+
+```
+SCL_PHP_WRAPPER=/usr/bin/scl enable rh-php73
 ```
 
 ## Final extra setup items
@@ -212,15 +224,10 @@ install)
 
 ```bash
 # open firewall for http and https
-firewall-cmd --permanent --zone=public --add-service http
-firewall-cmd --permanent --zone=public --add-service https
-systemctl restart firewalld
+sudo firewall-cmd --permanent --zone=public --add-service http
+sudo firewall-cmd --permanent --zone=public --add-service https
+sudo systemctl restart firewalld
 ```
-
-# MISP startup
-# initial password
-oi5pai6naPhedaefohghahghu3Vaeth9ihohtoGev4oosooz0xeiZ9shoh0ahthah6iepae5Quiw6thiuS2xah0ohp9ohrooch8igheakiiCeiwai3ohdeew9phiesho8caedeighea6baewei3eekuichaip6cie9sugh9Hei3aih9caeje8Ohm9ikuuhua7ooVie9YohmailahNak5uZah8ew3iivohCaoshee1vieB7eirahdeedei1Veyah9
-
 
 # Upgrade
 
@@ -240,3 +247,6 @@ sudo systemctl start httpd24-httpd misp-workers
 # first connection may take longer than usual if database schema migration have
 # to be applied after upgrade
 ```
+
+placeholder: oi5pai6naPhedaefohghahghu3Vaeth9ihohtoGev4oosooz0xeiZ9shoh0ahthah6iepae5Quiw6thiuS2xah0ohp9ohrooch8igheakiiCeiwai3ohdeew9phiesho8caedeighea6baewei3eekuichaip6cie9sugh9Hei3aih9caeje8Ohm9ikuuhua7ooVie9YohmailahNak5uZah8ew3iivohCaoshee1vieB7eirahdeedei1Veyah9
+
