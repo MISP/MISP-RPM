@@ -5,14 +5,26 @@
 # disable mangling of shebangs #!
 %define __brp_mangle_shebangs /usr/bin/true
 
-%define mispver 2.4.155
+# upstream MISP main version
+%define mispver 2.4.158
+# you can ship package level releases with the Release version value
+# defaults to -1.el7 for RHEL7
+%define rpmver 1
 %define phprpm php73
 %define pyrpm python38
 %define phpbrotliver 0.13.1
 
+%define _scl_php_loader /usr/bin/scl enable rh-%{phprpm}
+
+# output package version is
+# misp-$mispver-$rpmver.el7.$arch.rpm
+# example: rpm -i misp-2.4.158-1.el7.x86_64.rpm
+# subpackage example:
+# misp-pecl-ssdeep-2.4.158-1.el7.x86_64.rpm
+
 Name:		misp
 Version:	%{mispver}
-Release: 	4%{?dist}
+Release: 	%{rpmver}%{?dist}
 Summary:	MISP - malware information sharing platform
 
 Group:		Internet Applications
@@ -118,21 +130,43 @@ install -m 644 %{_topdir}/../%{SOURCE3} $RPM_BUILD_ROOT/usr/share/MISP/policy/se
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/systemd/system
 install -m 644 %{_topdir}/../%{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/systemd/system
 
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/default
+echo "SCL_PHP_WRAPPER=/usr/bin/scl enable rh-%{phprpm}" > $RPM_BUILD_ROOT%{_sysconfdir}/default/misp-workers
+
 mkdir -p $RPM_BUILD_ROOT/usr/share/httpd/.cache
 
 mkdir -p $RPM_BUILD_ROOT/var/www
 
+# we need to use the PHP environment installed with Redhat Software collection (scl)
+# this seems quite a challenge to install *inside* the RPM build root
+# so for some PHP extension we may already have the .so file present
+# which is loaded by PECL right before trying to perform install/upgrade
+# seems PECL segfaults in this case, thus the ugly hack to rename .ini file
+# right before a `pecl install` call
+
 # pecl - redis
+# do not let PECL load the extension
+sudo mv /etc/opt/rh/rh-php73/php.d/40-redis.ini{,.disabled} || true
 echo '' | sudo /opt/rh/rh-%{phprpm}/root/usr/bin/pecl install -f redis
 mkdir -p $RPM_BUILD_ROOT/opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules
 cp {,$RPM_BUILD_ROOT}/opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules/redis.so
+mkdir -p $RPM_BUILD_ROOT/etc/opt/rh/rh-php73/php.d/
+echo 'extension=redis' > $RPM_BUILD_ROOT/etc/opt/rh/rh-php73/php.d/40-redis.ini
+# restore config file
+sudo mv /etc/opt/rh/rh-php73/php.d/40-redis.ini{.disabled,} || true
 
 # pecl - ssdeep
 # ssdeep hard codes /usr/lib for libfuzzy.so
 sudo ln -sf /usr/lib64/libfuzzy.so /usr/lib/libfuzzy.so
+# do not let PECL load the extension
+sudo mv /etc/opt/rh/rh-php73/php.d/40-ssdeep.ini{,.disabled} || true
 echo '' | sudo /opt/rh/rh-%{phprpm}/root/usr/bin/pecl install -f ssdeep
 mkdir -p $RPM_BUILD_ROOT/opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules
 cp {,$RPM_BUILD_ROOT}/opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules/ssdeep.so
+mkdir -p $RPM_BUILD_ROOT/etc/opt/rh/rh-php73/php.d/
+echo 'extension=ssdeep' > $RPM_BUILD_ROOT/etc/opt/rh/rh-php73/php.d/40-ssdeep.ini
+# restore config file
+sudo mv /etc/opt/rh/rh-php73/php.d/40-ssdeep.ini{.disabled,} || true
 
 # pear - Crypt_GPG
 echo '' | sudo /opt/rh/rh-%{phprpm}/root/usr/bin/pear install -f Crypt_GPG
@@ -154,13 +188,22 @@ mkdir -p $RPM_BUILD_ROOT/opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules
 strip --strip-debug modules/brotli.so
 cp modules/brotli.so $RPM_BUILD_ROOT/opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules/brotli.so
 popd
+mkdir -p $RPM_BUILD_ROOT/etc/opt/rh/rh-php73/php.d/
+echo 'extension=brotli' > $RPM_BUILD_ROOT/etc/opt/rh/rh-php73/php.d/40-brotli.ini
 # and cleanup any trace to make check-buildroot happy (again) ...
 rm -rf $RPM_BUILD_ROOT/var/tmp/php-ext-brotli
 
 # pecl - rdkafka
+# do not let PECL load the extension
+sudo mv /etc/opt/rh/rh-php73/php.d/40-rdkafka.ini{,.disabled} || true
 echo '' | sudo /opt/rh/rh-%{phprpm}/root/usr/bin/pecl install -f rdkafka
 mkdir -p $RPM_BUILD_ROOT/opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules
 cp {,$RPM_BUILD_ROOT}/opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules/rdkafka.so
+mkdir -p $RPM_BUILD_ROOT/etc/opt/rh/rh-php73/php.d/
+echo 'extension=rdkafka' > $RPM_BUILD_ROOT/etc/opt/rh/rh-php73/php.d/40-rdkafka.ini
+# restore config file
+sudo mv /etc/opt/rh/rh-php73/php.d/40-rdkafka.ini{.disabled,} || true
+
 
 git clone -b v%{mispver} --depth 1 https://github.com/MISP/MISP.git $RPM_BUILD_ROOT/var/www/MISP
 
@@ -214,25 +257,25 @@ chmod g+w $RPM_BUILD_ROOT/var/www/MISP/app/Config
 %defattr(-,apache,apache,-)
 /var/www/cgi-bin/misp-virtualenv
 
-# TODO "extension=redis.so" to php.ini
 %files pecl-redis
 /opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules/redis.so
+%config(noreplace) /etc/opt/rh/rh-php73/php.d/40-redis.ini
 
-# TODO "extension=ssdeep.so" to php.ini
 %files pecl-ssdeep
 /opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules/ssdeep.so
+%config(noreplace) /etc/opt/rh/rh-php73/php.d/40-ssdeep.ini
+
+%files php-brotli
+/opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules/brotli.so
+%config(noreplace) /etc/opt/rh/rh-php73/php.d/40-brotli.ini
+
+%files pecl-rdkafka
+/opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules/rdkafka.so
+%config(noreplace) /etc/opt/rh/rh-php73/php.d/40-rdkafka.ini
 
 %files pear-crypt-gpg
 /opt/rh/rh-php73/root/usr/share/pear/Crypt
 /opt/rh/rh-php73/root/usr/share/pear-data/Crypt_GPG
-
-# TODO "extension=brotli.so" to php.ini
-%files php-brotli
-/opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules/brotli.so
-
-# TODO "extension=rdkafka.so" to php.ini
-%files pecl-rdkafka
-/opt/rh/rh-%{phprpm}/root/usr/lib64/php/modules/rdkafka.so
 
 %files
 %defattr(-,apache,apache,-)
@@ -240,6 +283,7 @@ chmod g+w $RPM_BUILD_ROOT/var/www/MISP/app/Config
 /var/www/MISP
 %defattr(-,root,root,-)
 /usr/share/MISP/policy/selinux/misp-*.pp
+%{_sysconfdir}/default/misp-workers
 %{_sysconfdir}/systemd/system/misp-workers.service
 # exclude test files whicht get detected by AV solutions
 %exclude /var/www/MISP/PyMISP/tests
@@ -279,6 +323,9 @@ semodule -i /usr/share/MISP/policy/selinux/misp-bash.pp
 semodule -i /usr/share/MISP/policy/selinux/misp-ps.pp
 
 %changelog
+* Tue May 24 2022 Rémi Laurent <remi.laurent@securitymadein.lu> - 2.4.158
+- update to 2.4.158
+
 * Thu May 12 2022 Rémi Laurent <remi.laurent@securitymadein.lu> - 2.4.155
 - update to 2.4.155 and RHEL 7.9 packaging without external repos
 

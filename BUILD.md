@@ -1,79 +1,73 @@
-# Building the RPMs
+# Building the RPMs on RHEL 7
 
-Before the MISP RPM can be created, the following dependencies must be built (in this order)
-* php
-* php-pear
-* php-pear-CommandLine
-* php-pear-Crypt_GPG
-* php-redis
-* python-cybox
-* python-stix
-* python-mixbox
-* python-pydeep
-* python-pymisp
-* python-lief (my current version doesn't work correctly, work in progress)
-* misp
+RHEL 7.9 fully tested (build and deployment)
 
-## MISP modules
-Building the misp modules is even trickier, as a lot of dependencies must be built before the misp-modules RPM can be created. MISP modules rely on python3, so you can use the python 3.4 provided py CentOS or any newer python version.
+## Prerequesites
 
-* python36-pip
-* python36-setuptools
-* misp-stix-converter
-* python36-libtaxii
-* python36-lxml
-* python36-six
-* python36-python_dateutil
-* python36-ordered_set
-* python36-mixbox
-* python36-cybox
-* python36-stix
-* python36-backports_abc
-* python36-tornado
-* python36-dnspython
-* python36-chardet
-* python36-nose
-* python36-jsonschema
-* python36-rdflib
-* python36-beautifulsoup4
-* python36-colorlog
-* python36-argparse
-* python36-pytz
-* python36-isodate
-* python36-pyparsing
-* python36-redis
-* python36-pygeoip
-* python36-idna
-* python36-urllib3
-* python36-certifi
-* python36-requests_cache
-* python36-url_normalize
-* python36-pillow
-* python36-urlachriver
-* python36-ez_setup
-* python36-asnhistory
-* python36-cabby
-* python36-dateutils
-* python36-furl
-* python36-domaintools_api
-* python36-ipasn_redis
-* python36-orderedmultidict
-* python36-passivetotal
-* python36-olefile
-* python36-pyaml
-* python36-pypdns
-* python36-pyeupi
-* python36-pypssl
-* python36-pytesseract
-* python36-SPARQLWrapper
-* python36-PyYAML
-* python36-uwhois
-* python36-shodan
-* python36-XlsxWriter
-* python36-colorama
-* python36-click
-* python36-click_plugins
-* python36-future
-* python36-requests
-* python36-pymisp
-* misp-modules
+RHEL must be registered and attached as we need Software collections for at
+least PHP 7.3 (rh-php73)
+
+`make prepare` should take care of this subscription-manager step and install a
+small set of pre requirements
+
+
+## Build
+
+`make misp.rpm` should then cake care of all the remaining installation
+components and the actual RPMs build
+
+### Version bumping
+
+Please check spec files in `SPECS/`, field `Version:` and `Release:`
+
+Packages are using a given release or upstream git commit id as RPM versioning;
+please keep in mind semver / version comparison, especially for packages with
+no upstream versioning. Example is `gtcaca` which doesn't have any upstream
+version nor tag and for which we set up an arbitrary version (1.0). If you
+decide to change the commit id (cid) you'll have to bump the version which will
+be used in the output RPM package.
+
+## Output
+
+Results should be found in the `RPMS/` directory, a typical successful build
+should output the following packages:
+
+```bash
+$ ls -1 RPMS/x86_64/
+faup-1.6.0+8e81b17-1.el7.x86_64.rpm
+faup-devel-1.6.0+8e81b17-1.el7.x86_64.rpm
+gtcaca-1.0+98c7aa8-2.el7.x86_64.rpm
+gtcaca-devel-1.0+98c7aa8-2.el7.x86_64.rpm
+misp-2.4.158-1.el7.x86_64.rpm
+misp-pear-crypt-gpg-2.4.158-1.el7.x86_64.rpm
+misp-pecl-rdkafka-2.4.158-1.el7.x86_64.rpm
+misp-pecl-redis-2.4.158-1.el7.x86_64.rpm
+misp-pecl-ssdeep-2.4.158-1.el7.x86_64.rpm
+misp-php-brotli-2.4.158-1.el7.x86_64.rpm
+misp-python-virtualenv-2.4.158-1.el7.x86_64.rpm
+```
+
+## Cleanup
+
+Normally subsequent `make misp.rpm` run should rebuild everything.
+
+`make clean` will remove the artifacts and the build environment. Run this in
+case of issue and/or if you want to rebuild everything from scratch.
+
+
+**CAUTION** **CAUTION**
+
+See comments in the `spec` files, especially regarding side effect on the
+system being used for the build (`misp.spec`) - this build suite **will alter
+the host system** by installing RedHat PHP Software collection. Therefore it
+isn't recommended to run this on a production system nor the target host where
+you plan to install MISP.
+
+```
+# we need to use the PHP environment installed with Redhat Software collection (scl)
+# this seems quite a challenge to install *inside* the RPM build root
+# so for some PHP extension we may already have the .so file present
+# which is loaded by PECL right before trying to perform install/upgrade
+# seems PECL segfaults in this case, thus the ugly hack to rename .ini file
+# right before a `pecl install` call
+```

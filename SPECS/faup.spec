@@ -1,7 +1,10 @@
 %define cmake cmake3 -DCMAKE_INSTALL_PREFIX:PATH=/usr
+# no upstream tags/releases for a while - let's use git commitid
+%define version 1.6.0
+%define cid 8e81b17
 
 Name:		faup
-Version:	1.6
+Version:	%{version}+%{cid}
 Release:	1%{?dist}
 Summary:    	Fast URL decoder library
 License:    	Public
@@ -10,7 +13,7 @@ Group:		Development/Languages
 URL:		https://github.com/stricaud/faup/
 Source0:	fake-tgz.tgz
 
-BuildRequires: cmake3, cppcheck, gtcaca-devel, git
+BuildRequires: cmake3, gtcaca-devel, git
 Requires: gtcaca
 
 %description
@@ -22,12 +25,11 @@ Summary: Files needed to build faup
 %description devel
 This package contains the files needed for building faup extensions. 
 
-%prep
-%setup -q -n fake-tgz
-
 %build
+rm -rf faup
 git clone https://github.com/stricaud/faup.git faup
 cd faup
+git reset --hard %{cid}
 mkdir -p build
 cd build
 %cmake ..
@@ -59,6 +61,9 @@ cd faup/build/
 /usr/include/faup/*.h
 
 %changelog
+* Tue May 24 2022 Rémi Laurent <remi.laurent@securitymadein.lu>
+- bound version and git commit id
+
 * Wed Jun 30 2021 Andreas Muehlemann <andreas.muehlemann@swithc.ch>
 - version 1.6
 - clone from git
