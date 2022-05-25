@@ -11,7 +11,6 @@ License:    	Public
 
 Group:		Development/Languages
 URL:		https://github.com/stricaud/faup/
-Source0:	fake-tgz.tgz
 
 BuildRequires: cmake3, gtcaca-devel, git
 Requires: gtcaca
