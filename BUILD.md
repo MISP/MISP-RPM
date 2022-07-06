@@ -10,6 +10,10 @@ least PHP 7.3 (rh-php73)
 `make prepare` should take care of this subscription-manager step and install a
 small set of pre requirements
 
+Be aware some external dependencies will be fetched from EPEL (check
+`Makefile`) but that `epel-release` package and references are going to be
+removed right before building the MISP RPM (see *Output* for those external
+dependencies).
 
 ## Build
 
@@ -29,22 +33,38 @@ be used in the output RPM package.
 
 ## Output
 
-Results should be found in the `RPMS/` directory, a typical successful build
-should output the following packages:
+Results should be found in the `RPMS/` and `RPMS-PREREQ-*/` directories.
+
+`make release` will create directory `release` will all built and prerequesites
+packages
+
+
+Example release:
 
 ```bash
-$ ls -1 RPMS/x86_64/
+$ ls -1 release/
+cmake3-3.17.5-1.el7.x86_64.rpm
+cmake3-data-3.17.5-1.el7.noarch.rpm
 faup-1.6.0+8e81b17-1.el7.x86_64.rpm
 faup-devel-1.6.0+8e81b17-1.el7.x86_64.rpm
 gtcaca-1.0+98c7aa8-2.el7.x86_64.rpm
 gtcaca-devel-1.0+98c7aa8-2.el7.x86_64.rpm
-misp-2.4.158-1.el7.x86_64.rpm
-misp-pear-crypt-gpg-2.4.158-1.el7.x86_64.rpm
-misp-pecl-rdkafka-2.4.158-1.el7.x86_64.rpm
-misp-pecl-redis-2.4.158-1.el7.x86_64.rpm
-misp-pecl-ssdeep-2.4.158-1.el7.x86_64.rpm
-misp-php-brotli-2.4.158-1.el7.x86_64.rpm
-misp-python-virtualenv-2.4.158-1.el7.x86_64.rpm
+imlib2-1.4.5-9.el7.x86_64.rpm
+imlib2-devel-1.4.5-9.el7.x86_64.rpm
+libcaca-0.99-0.40.beta20.el7.x86_64.rpm
+libcaca-devel-0.99-0.40.beta20.el7.x86_64.rpm
+libuv-1.44.1-1.el7.x86_64.rpm
+libzstd-1.5.2-1.el7.x86_64.rpm
+misp-2.4.159-1.el7.x86_64.rpm
+misp-pear-crypt-gpg-2.4.159-1.el7.x86_64.rpm
+misp-pecl-rdkafka-2.4.159-1.el7.x86_64.rpm
+misp-pecl-redis-2.4.159-1.el7.x86_64.rpm
+misp-pecl-ssdeep-2.4.159-1.el7.x86_64.rpm
+misp-php-brotli-2.4.159-1.el7.x86_64.rpm
+misp-python-virtualenv-2.4.159-1.el7.x86_64.rpm
+rhash-1.3.4-2.el7.x86_64.rpm
+ssdeep-devel-2.14.1-1.el7.x86_64.rpm
+ssdeep-libs-2.14.1-1.el7.x86_64.rpm
 ```
 
 ## Cleanup

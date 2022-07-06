@@ -48,11 +48,12 @@ Set up recommended max values for PHP runtime
 Follow the install order and adapt versions if required
 ```
 # prereq for misp
-sudo yum install -y gtcaca-1.0+*.rpm
+sudo yum install -y gtcaca-1.0+*.rpm libcaca*.rpm imlib2*.rpm
 sudo yum install -y faup-1.6.0+*.rpm
+sudo yum install -y ssdeep-libs*.rpm
 
 # prereq PHP extensions for misp
-export mispver="2.4.158-1"
+export mispver="2.4.159-1"
 sudo yum install -y misp-pear-crypt-gpg-$mispver.el7.x86_64.rpm \
   misp-pecl-rdkafka-$mispver.el7.x86_64.rpm \
   misp-pecl-redis-$mispver.el7.x86_64.rpm \
@@ -229,11 +230,6 @@ sudo firewall-cmd --permanent --zone=public --add-service https
 sudo systemctl restart firewalld
 ```
 
-## Errata
-
-- need manual install of `librdkafka` for PHP rdkafka extension 
-  `sudo yum install -y librdkafka`
-
 # Upgrade
 
 Example upgrade procedure (always check upstream MISP documentation regarding
@@ -244,7 +240,7 @@ upgrades):
 sudo systemctl stop httpd24-httpd misp-workers
 
 # upgrade the MISP RPM package set
-sudo rpm -U misp-*2.4.158*.rpm
+sudo rpm -U misp-*2.4.159*.rpm
 
 # start everything
 sudo systemctl start httpd24-httpd misp-workers
