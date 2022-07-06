@@ -1,3 +1,5 @@
 BUILD/
 RPMS/
 SRPMS/
+RPMS-PREREQ-*/
+release/
