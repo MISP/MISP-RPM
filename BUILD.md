@@ -15,6 +15,13 @@ Be aware some external dependencies will be fetched from EPEL (check
 removed right before building the MISP RPM (see *Output* for those external
 dependencies).
 
+```bash
+sudo yum install git gcc bcc gcc-c++ cmake -y
+git clone https://github.com/MISP/MISP-RPM.git
+cd MISP-RPM
+```
+
+
 ## Build
 
 `make misp.rpm` should then cake care of all the remaining installation
