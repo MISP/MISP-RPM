@@ -1,8 +1,11 @@
 %define cmake cmake3 -DCMAKE_INSTALL_PREFIX:PATH=/usr
+# no upstream tags/releases - let's use git commitid
+%define version 1.0
+%define cid 98c7aa8
 
 Name:		gtcaca
-Version:	0+gitb05ed3c
-Release:	3%{?dist}
+Version:	%{version}+%{cid}
+Release:	2%{?dist}
 Summary:    	some widgets for libcaca
 License:    	Public
 
@@ -21,12 +24,11 @@ Summary: Files needed to build gtcaca
 %description devel
 This package contains the files needed for building gtcaca extensions. 
 
-%prep
-%setup -q -T -c
-
 %build
+rm -rf gtcaca
 git clone https://github.com/stricaud/gtcaca.git gtcaca
 cd gtcaca
+git reset --hard %{cid}
 mkdir build
 cd build
 %cmake ..
@@ -57,11 +59,8 @@ cd gtcaca/build/
 /usr/include/gtcaca/window.h
 
 %changelog
-* Wed Nov 15 2023 Andreas Muehleamnn <andreas.muehlemann@switch.ch>
-- removing cppcheck requirement
-
-* Tue Jun 27 2023 Andreas Muehlemann <andreas.muehlemann@switch.ch>
-- simplified source and setup routine
+* Tue May 24 2022 Rémi Laurent <remi.laurent@securitymadein.lu>
+- bound version and git commit id
 
 * Mon May 25 2020 Andreas Muehlemann <andreas.muehlemann@switch.ch>
 - added cmake macro, changed source0 to not interfere with other master.tar.gz files

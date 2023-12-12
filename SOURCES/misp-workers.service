@@ -1,13 +1,13 @@
 [Unit]
 Description=MISP workers
-After=network.target remote-fs.target nss-lookup.target httpd.service
+After=network.target remote-fs.target nss-lookup.target httpd.service mariadb.service redis.service
 
 [Service]
-Environment=SCL_PHP_WRAPPER=
-EnvironmentFile=-/etc/default/misp-workers
 Type=forking
-ExecStart=/bin/bash -c '${SCL_PHP_WRAPPER} /var/www/MISP/app/Console/worker/start.sh'
+ExecStart=/var/www/MISP/app/Console/worker/start.sh
 User=apache
+Restart=always
+RestartSec=10
 
 [Install]
 WantedBy=multi-user.target
