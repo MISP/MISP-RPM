@@ -10,7 +10,7 @@ to upstream MISP documentation for anything MISP related and/or upgrade paths.
 ## Reporting issues
 
 Please report issues on this branch to https://github.com/MISP/MISP-RPM and not
-the original developers.
+to the original developers.
 
 ## History
 ### Dec 12 2023
