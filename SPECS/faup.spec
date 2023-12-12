@@ -1,11 +1,8 @@
 %define cmake cmake3 -DCMAKE_INSTALL_PREFIX:PATH=/usr
-# no upstream tags/releases for a while - let's use git commitid
-%define version 1.6.0
-%define cid 8e81b17
 
 Name:		faup
-Version:	%{version}+%{cid}
-Release:	1%{?dist}
+Version:	1.6
+Release:	2%{?dist}
 Summary:    	Fast URL decoder library
 License:    	Public
 
@@ -24,11 +21,12 @@ Summary: Files needed to build faup
 %description devel
 This package contains the files needed for building faup extensions. 
 
+%prep
+%setup -q -T -c
+
 %build
-rm -rf faup
 git clone https://github.com/stricaud/faup.git faup
 cd faup
-git reset --hard %{cid}
 mkdir -p build
 cd build
 %cmake ..
@@ -60,10 +58,10 @@ cd faup/build/
 /usr/include/faup/*.h
 
 %changelog
-* Tue May 24 2022 Rémi Laurent <remi.laurent@securitymadein.lu>
-- bound version and git commit id
+* Tue Jun 27 2023 Andreas Muehlemann <andreas.muehlemann@switch.ch>
+- simplified source and setup routine
 
-* Wed Jun 30 2021 Andreas Muehlemann <andreas.muehlemann@swithc.ch>
+* Wed Jun 30 2021 Andreas Muehlemann <andreas.muehlemann@switch.ch>
 - version 1.6
 - clone from git
 
