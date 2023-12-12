@@ -13,7 +13,7 @@ collection specifics and packaging
 sudo subscription-manager register --auto-attach
 sudo yum-config-manager --enable rhel-server-rhscl-7-rpms
 sudo subscription-manager repos --enable rhel-7-server-optional-rpms
-sudo yum install -y scl-utils ca-certificates
+sudo yum install -y ca-certificates
 ```
 
 ## Install Apache webserver - httpd24
@@ -51,18 +51,11 @@ Follow the install order and adapt versions if required
 sudo yum install -y gtcaca-1.0+*.rpm libcaca*.rpm imlib2*.rpm
 sudo yum install -y faup-1.6.0+*.rpm
 sudo yum install -y ssdeep-libs*.rpm
-
-# prereq PHP extensions for misp
-export mispver="2.4.159-1"
-sudo yum install -y misp-pear-crypt-gpg-$mispver.el7.x86_64.rpm \
-  misp-pecl-rdkafka-$mispver.el7.x86_64.rpm \
-  misp-pecl-redis-$mispver.el7.x86_64.rpm \
-  misp-pecl-ssdeep-$mispver.el7.x86_64.rpm \
-  misp-php-brotli-$mispver.el7.x86_64.rpm \
-  misp-python-virtualenv-$mispver.el7.x86_64.rpm
+sudo yum install -y libbrotli*.rpm
+sudo yum install -y misp-php73-*rpm
 
 # install misp rpm
-sudo yum install -y misp-$mispver.el7.x86_64.rpm
+sudo yum install -y misp-python-virtualenv-2.4.*.rpm misp-2.4.*.rpm
 ```
 
 ## Apache/httpd configuration
@@ -96,7 +89,6 @@ Example Apache VirtualHost configuration:
 ## Install MySQL databse - rh-mariadb105-mariadb
 
 ```bash
-sudo yum install -y rh-mariadb105-mariadb rh-mariadb105-mariadb-server-utils
 sudo systemctl enable rh-mariadb105-mariadb.service
 sudo systemctl start rh-mariadb105-mariadb.service
 ```
@@ -124,6 +116,18 @@ sudo scl enable rh-mariadb105 'mysql -u misp -p misp' < /var/www/MISP/INSTALL/MY
 
 ## MISP configuration
 
+Setting up default bare configuration (please check MISP documentation for full
+proper setup):
+
+```
+sudo cp -a /var/www/MISP/app/Config/core.default.php /var/www/MISP/app/Config/core.php
+sudo cp -a /var/www/MISP/app/Config/bootstrap.default.php /var/www/MISP/app/Config/bootstrap.php
+sudo cp -a /var/www/MISP/app/Config/config.default.php /var/www/MISP/app/Config/config.php
+sudo cp -a /var/www/MISP/app/Config/database.default.php /var/www/MISP/app/Config/database.php
+sudo chmod o-rwx /var/www/MISP/app/Config/{config.php,database.php,email.php}
+sudo chown apache. /var/www/MISP/app/Config/{config.php,database.php,email.php}
+```
+
 Configure your database access (password `changeme` should be set accordingly
 to the previous database setup phase):
 
@@ -145,17 +149,6 @@ class DATABASE_CONFIG {
 }
 ```
 
-Setting up default bare configuration (please check MISP documentation for full
-proper setup):
-
-```
-sudo cp -a /var/www/MISP/app/Config/core.default.php /var/www/MISP/app/Config/core.php
-sudo cp -a /var/www/MISP/app/Config/bootstrap.default.php /var/www/MISP/app/Config/bootstrap.php
-sudo cp -a /var/www/MISP/app/Config/config.default.php /var/www/MISP/app/Config/config.php
-sudo chmod o-rwx /var/www/MISP/app/Config/{config.php,database.php,email.php}
-sudo chown apache. /var/www/MISP/app/Config/{config.php,database.php,email.php}
-```
-
 Adapt Python binary path in `/var/www/MISP/app/Config/config.php`
 
 ```
@@ -170,9 +163,13 @@ should become (the path of the full Python Virtualenv shipped with RPMs):
 ## Install Redis server - rh-redis6-redis
 
 ```
-sudo yum install -y rh-redis6-redis
 sudo systemctl enable rh-redis6-redis
 sudo systemctl start rh-redis6-redis
+```
+
+## Link php
+```
+ln -s /opt/rh/rh-php73/root/bin/php /usr/bin/php
 ```
 
 ## Enable and start misp-workers
@@ -180,25 +177,6 @@ sudo systemctl start rh-redis6-redis
 ```
 sudo systemctl enable misp-workers
 sudo systemctl start misp-workers
-```
-
-Note - the Systemd Unit should make use of the software collection with the
-`scl` wrapper.
-
-`/etc/systemd/system/misp-workers.service` should have lines similar to
-
-```
-Environment=SCL_PHP_WRAPPER=
-EnvironmentFile=-/etc/default/misp-workers
-Type=forking
-ExecStart=/bin/bash -c '${SCL_PHP_WRAPPER} /var/www/MISP/app/Console/worker/start.sh'
-```
-
-with `/etc/default/misp-workers` optionaly loaded and containing the path to
-the scl wrapper
-
-```
-SCL_PHP_WRAPPER=/usr/bin/scl enable rh-php73
 ```
 
 ## Final extra setup items
@@ -212,13 +190,13 @@ sudo chcon -t httpd_sys_rw_content_t /var/www/MISP/app/Config/config.php
 Verify PHP extensions are properly enabled (should already be done through RPM
 install)
 
-- `/etc/opt/rh/rh-php73/php.d/40-redis.ini` 
+- `/etc/opt/rh/rh-php73/php.d/redis.ini` 
   `extension=redis`
-- `/etc/opt/rh/rh-php73/php.d/40-ssdeep.ini` 
+- `/etc/opt/rh/rh-php73/php.d/ssdeep.ini` 
   `extension=ssdeep`
-- `/etc/opt/rh/rh-php73/php.d/40-brotli.ini` 
+- `/etc/opt/rh/rh-php73/php.d/brotli.ini` 
   `extension=brotli`
-- `/etc/opt/rh/rh-php73/php.d/40-rdkafka.ini`
+- `/etc/opt/rh/rh-php73/php.d/rdkafka.ini`
   `extension=rdkafka`
 
 ## Config firewalld for outside access
@@ -248,6 +226,3 @@ sudo systemctl start httpd24-httpd misp-workers
 # first connection may take longer than usual if database schema migration have
 # to be applied after upgrade
 ```
-
-placeholder: oi5pai6naPhedaefohghahghu3Vaeth9ihohtoGev4oosooz0xeiZ9shoh0ahthah6iepae5Quiw6thiuS2xah0ohp9ohrooch8igheakiiCeiwai3ohdeew9phiesho8caedeighea6baewei3eekuichaip6cie9sugh9Hei3aih9caeje8Ohm9ikuuhua7ooVie9YohmailahNak5uZah8ew3iivohCaoshee1vieB7eirahdeedei1Veyah9
-
