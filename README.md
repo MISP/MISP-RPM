@@ -13,6 +13,10 @@ Please report issues on this branch to https://github.com/MISP/MISP-RPM and not
 to the original developers.
 
 ## History
+#### Feb 9 2024
+- release 2.4.183-1
+- release 2.4.184-1
+
 #### Dec 19 2023
 - release 2.4.182-1
 
