@@ -6,7 +6,7 @@
 %define __brp_mangle_shebangs /usr/bin/true
 
 # upstream MISP main version
-%define mispver 2.4.182
+%define mispver 2.4.184
 # you can ship package level releases with the Release version value
 # defaults to -1.el7 for RHEL7
 %define rpmver 1
@@ -27,6 +27,7 @@ Source1:	misp-httpd.pp
 Source2:	misp-bash.pp
 Source3:	misp-ps.pp
 Source4:	misp-workers.service
+Patch0:         MISP-AppModel.php.patch
 
 #BuildRequires:	/usr/bin/pathfix.py
 BuildRequires:	git, rh-%{pyrpm}-python-devel, rh-%{pyrpm}-python-pip, libxslt-devel, zlib-devel
@@ -98,6 +99,11 @@ pushd $RPM_BUILD_ROOT/var/www/MISP
 	git submodule update --init --recursive
 	git submodule foreach --recursive git config core.filemode false
 	git config core.filemode false
+
+
+	# patch app/Model/Server.php to show commit ID
+	patch --ignore-whitespace -p0 < %{PATCH0}
+
 popd
 
 # create python3 virtualenv
@@ -128,6 +134,10 @@ pushd $RPM_BUILD_ROOT/var/www/MISP/app
 	sed -i composer.json -e 's/"php": ">=7.4.0,<8.0.0",/"php": ">=7.3.0,<8.0.0",/g'
 	/opt/rh/rh-%{phprpm}/root/usr/bin/php composer.phar install
 popd
+
+cd $RPM_BUILD_ROOT/var/www/MISP
+# save commit ID of this installation
+git rev-parse HEAD > .git_commit_version
 
 # cleanup
 find $RPM_BUILD_ROOT/var/www/ \
@@ -190,6 +200,12 @@ semodule -i /usr/share/MISP/policy/selinux/misp-bash.pp
 semodule -i /usr/share/MISP/policy/selinux/misp-ps.pp
 
 %changelog
+* Fri Feb 9 2024 Andreas Muehlemann <andreas.muehlemann@switch.ch> - 2.4.184
+- update to 2.4.184
+
+* Thu Jan 18 2024 Andreas Muehlemann <andreas.muehlemann@switch.ch> - 2.4.183
+- update to 2.4.183
+
 * Tue Dec 19 2023 Andreas Muehlemann <andreas.muehlemann@switch.ch> - 2.4.182
 - update to 2.4.182
 
