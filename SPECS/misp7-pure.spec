@@ -6,7 +6,7 @@
 %define __brp_mangle_shebangs /usr/bin/true
 
 # upstream MISP main version
-%define mispver 2.4.184
+%define mispver 2.4.185
 # you can ship package level releases with the Release version value
 # defaults to -1.el7 for RHEL7
 %define rpmver 1
@@ -200,6 +200,9 @@ semodule -i /usr/share/MISP/policy/selinux/misp-bash.pp
 semodule -i /usr/share/MISP/policy/selinux/misp-ps.pp
 
 %changelog
+* Fri Feb 23 2024 Andreas Muehlemann <amuehlem@gmail.com> - 2.4.185
+- update to 2.4.185
+
 * Fri Feb 9 2024 Andreas Muehlemann <andreas.muehlemann@switch.ch> - 2.4.184
 - update to 2.4.184
 
