@@ -38,7 +38,7 @@ BuildRequires:	/usr/bin/pathfix.py
 BuildRequires:  git, %{pythonver_short}-devel, %{pythonver_short}-pip
 BuildRequires:  libxslt-devel, zlib-devel
 BuildRequires:  php, php-cli, php-xml
-BuildRequires:	php-mbstring
+BuildRequires:	php-mbstring, php-json
 BuildRequires:	ssdeep-libs, ssdeep-devel
 BuildRequires:	cmake3, bash-completion
 BuildRequires:	libcaca-devel, wget
@@ -48,8 +48,9 @@ Requires:       php, php-cli, php-gd, php-pdo
 Requires:	php-mysqlnd, php-mbstring, php-xml
 Requires:	php-bcmath, php-opcache, php-json
 Requires:	php-pecl-zip, php-intl
-Requires:	php-pecl-ssdeep, php-process
-Requires:	php-pecl-apcu, php-brotli, php-pecl-rdkafka
+Requires:	misp-php74-pecl-ssdeep, php-process
+Requires:	php-pecl-apcu, misp-php74-pecl-brotli, misp-php74-pecl-rdkafka
+Requires:	misp-php74-pear-crypt-gpg, misp-php74-pear-commandline
 Requires:	supervisor, faup, gtcaca
 
 %package python-virtualenv
@@ -132,8 +133,8 @@ $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U .
 
 # CakePHP
 cd $RPM_BUILD_ROOT/var/www/MISP/app
-/opt/remi/php74/root/usr/bin/php composer.phar install --no-dev
-/opt/remi/php74/root/usr/bin/php composer.phar require --with-all-dependencies supervisorphp/supervisor:^4.0 guzzlehttp/guzzle php-http/message php-http/message-factory lstrojny/fxmlrpc
+/usr/bin/php composer.phar install --no-dev
+/usr/bin/php composer.phar require --with-all-dependencies supervisorphp/supervisor:^4.0 guzzlehttp/guzzle php-http/message php-http/message-factory lstrojny/fxmlrpc
 
 cd $RPM_BUILD_ROOT/var/www/MISP
 # save commit ID of this installation
@@ -269,6 +270,6 @@ semodule -i /usr/share/MISP/policy/selinux/misp-ps.pp
 semodule -i /usr/share/MISP/policy/selinux/misp-workers8.pp
 
 %changelog
-* Tue Sep 3 2024 Andreas Muehlemann <amuehlem@gmail.com> - 2.4.187
+* Thu Sep 5 2024 Andreas Muehlemann <amuehlem@gmail.com> - 2.4.197
 - first version for RHEL8
 
