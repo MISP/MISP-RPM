@@ -14,6 +14,7 @@ to the original developers.
 
 ## History
 ### Sep 20 2024
+- release 2.4.198-1 for RHEL7
 - release 2.4.198-1-el8, first version for RHEL8 systems
 
 ### Jul 11 2024
