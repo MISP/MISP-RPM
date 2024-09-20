@@ -10,13 +10,13 @@
 # exclude for requirements
 %global __requires_exclude ^/opt/python/cp3.*
 
-%define pymispver 2.4.196
+%define pymispver 2.4.198
 %define mispstixver 2.4.196
 %define pythonver python3.8
 %define pythonver_short python38
 
 Name:	    	misp
-Version:	2.4.197
+Version:	2.4.198
 release:	1%{?dist}
 Summary:	MISP - malware information sharing platform
 
@@ -50,8 +50,8 @@ Requires:	php-bcmath, php-opcache, php-json
 Requires:	php-pecl-zip, php-intl
 Requires:	misp-php74-pecl-ssdeep, php-process
 Requires:	php-pecl-apcu, misp-php74-pecl-brotli, misp-php74-pecl-rdkafka
-Requires:	misp-php74-pear-crypt-gpg, misp-php74-pear-commandline
-Requires:	supervisor, faup, gtcaca
+Requires:	misp-php74-pear-crypt-gpg, misp-php74-pear-command-line
+Requires:	faup, gtcaca
 
 %package python-virtualenv
 Summary: 	the python virtual environment for MISP
@@ -270,6 +270,9 @@ semodule -i /usr/share/MISP/policy/selinux/misp-ps.pp
 semodule -i /usr/share/MISP/policy/selinux/misp-workers8.pp
 
 %changelog
+* Wed Sep 18 2024 Andreas Muehlemann <amuehlem@gmail.com> - 2.4.198
+- update to v2.4.198
+
 * Thu Sep 5 2024 Andreas Muehlemann <amuehlem@gmail.com> - 2.4.197
 - first version for RHEL8
 
