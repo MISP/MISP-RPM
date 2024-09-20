@@ -4,7 +4,7 @@ This RPMs work with a clean Red Hat installation. There are no external reposito
 
 ## Install
 
-See [INSTALL.md](INSTALL.md) for this specific RPM install on RedHat and refer
+See [INSTALL8.md](INSTALL8.md) for this specific RPM install on RedHat and refer
 to upstream MISP documentation for anything MISP related and/or upgrade paths.
 
 ## Reporting issues
