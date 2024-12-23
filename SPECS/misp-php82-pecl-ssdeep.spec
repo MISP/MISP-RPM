@@ -3,7 +3,7 @@
 %global pecl_xmldir /var/lib/pear/pkgxml
 %global php_extdir /usr/lib64/php/modules/
 
-Name:       misp-php74-pecl-ssdeep
+Name:       misp-php82-pecl-ssdeep
 Version:    1.1.0
 Release:    1%{?dist}
 Summary:    PHP extension for interfacing ssdeep
@@ -13,11 +13,12 @@ License:    PHP
 URL:        https://github.com/phpssdeep/phpssdeep/
 Source0:    https://pecl.php.net/get/ssdeep-%{version}.tgz
 
-BuildRequires:  php >= 7.4, php < 8, php-devel >= 7.4, php < 8
-BuildRequires: 	php-cli >= 7.4, php-cli < 8
-BuildRequires:	php-pear
-BuildRequires:	ssdeep, ssdeep-devel
-Requires:       php >= 7.4, php < 8
+Patch0:	    https://patch-diff.githubusercontent.com/raw/php/pecl-text-ssdeep/pull/2.patch
+
+BuildRequires:  php, php-devel
+BuildRequires: 	php-cli, php-pear
+BuildRequires:	ssdeep, ssdeep-devel, patch
+Requires:       php
 
 %description
 PHP extension for interfacing ssdeep
@@ -31,6 +32,9 @@ extension=%{pecl_name}.so
 EOF
 
 %build
+# patch for php8
+patch -p1 < %{PATCH0}
+
 # ssdeep hard codes /usr/lib for libfuzzy.so
 phpize
 ./configure \

@@ -1,29 +1,27 @@
 %global php_inidir  %{_sysconfdir}/php.d
-%global pecl_name   brotli
+%global pecl_name   redis
 %global pecl_xmldir /var/lib/pear/pkgxml
 %global php_extdir /usr/lib64/php/modules/
 
-Name:       misp-php74-pecl-brotli
-Version:    0.14.2
+Name:       misp-php82-pecl-redis
+Version:    5.3.7
 Release:    1%{?dist}
-Summary:    PHP extension for interfacing brotli
+Summary:    PHP extension for interfacing redis
 
 Group:      Development/Languages
 License:    PHP
-URL:        https://github.com/phpbrotli/phpbrotli/
-Source0:    https://pecl.php.net/get/brotli-%{version}.tgz
+URL:        https://github.com/phpredis/phpredis/
+Source0:    https://pecl.php.net/get/redis-%{version}.tgz
 
-BuildRequires:  php >= 7.4, php < 8, php-devel >= 7.4, php-devel < 8
-BuildRequires: 	php-cli >= 7.4, php-cli < 8
-BuildRequires:	php-pear
-BuildRequires:	brotli, brotli-devel
+BuildRequires:  php, php-devel
+BuildRequires: 	php-cli, php-pear
 Requires:       php
 
 %description
-PHP extension for interfacing brotli
+PHP extension for interfacing redis
 
 %prep
-%setup -q -n brotli-%{version}
+%setup -q -n redis-%{version}
 
 # create the ini file
 cat > %{pecl_name}.ini << EOF
@@ -31,10 +29,10 @@ extension=%{pecl_name}.so
 EOF
 
 %build
-# brotli hard codes /usr/lib for libfuzzy.so
 phpize
-./configure \
-    --with-brotli \
+%configure \
+    --enable-redis \
+    --enable-redis-session \
     --with-php-config=/usr/bin/php-config
 make %{?_smp_mflags}
 
@@ -48,4 +46,4 @@ install -D -m 644 %{pecl_name}.ini %{buildroot}/etc/php.d/%{pecl_name}.ini
 
 %changelog
 * Thu Sep 5 2024 Andreas Muehlemann <amuehlem@gmail.com> - 5.3.7
-- first version for rh-php74
+- first version for rhel8

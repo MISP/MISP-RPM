@@ -1,7 +1,7 @@
 %global php_inidir  %{_sysconfdir}/php.d
 %global pear_name  Console_CommandLine
 
-Name:       misp-php74-pear-command-line
+Name:       misp-php82-pear-command-line
 Version:    1.2.2
 Release:    1%{?dist}
 Summary:    A full featured command line options and arguments parser
@@ -13,10 +13,9 @@ Source0:    http://download.pear.php.net/get/%{pear_name}-%{version}.tgz
 
 BuildArch:	noarch
 
-BuildRequires:  php >= 7.4, php < 8.0, php-devel >= 7.4, php-devel < 8.0
-BuildRequires:	php-cli >= 7.4, php-cli < 8.0
-BuildRequires: 	php-pear
-Requires:       php >= 7.4, php < 8.0, php-pear
+BuildRequires:  php, php-devel
+BuildRequires:	php-cli, php-pear
+Requires:       php, php-pear
 
 %description
 Console_CommandLine is a full featured package for managing command-line
@@ -54,5 +53,5 @@ pear -d php_dir=/usr/share/pear install --nodeps --packagingroot $RPM_BUILD_ROOT
 %exclude /var/lib/pear/.lock
 
 %changelog
-* Tue Sep 3 2024 Andreas Muehlemann <amuehlem@gmail.com> - 1.2.2
+* Fri Dec 20 2024 Andreas Muehlemann <amuehlem@gmail.com> - 1.2.2
 - first version for RHEL8

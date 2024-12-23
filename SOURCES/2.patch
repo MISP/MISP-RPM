@@ -1,0 +1,29 @@
+From 369e87e7469fd3e30bf46cff9f12f0d5bfc9e611 Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@remirepo.net>
+Date: Fri, 4 Sep 2020 14:47:29 +0200
+Subject: [PATCH] fix for PHP 8
+
+---
+ ssdeep.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/ssdeep.c b/ssdeep.c
+index 00e91e5..4dee7e2 100644
+--- a/ssdeep.c
++++ b/ssdeep.c
+@@ -48,6 +48,15 @@
+ #include "php_ssdeep.h"
+ #include <fuzzy.h>
+ 
++/* For PHP 8 */
++#ifndef TSRMLS_D
++#define TSRMLS_D void
++#define TSRMLS_DC
++#define TSRMLS_C
++#define TSRMLS_CC
++#define TSRMLS_FETCH()
++#endif
++
+ /* True global resources - no need for thread safety here */
+ ZEND_BEGIN_ARG_INFO_EX(arginfo_ssdeep_fuzzy_hash, 0, 0, 1)
+     ZEND_ARG_INFO(0, to_hash)

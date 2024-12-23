@@ -1,7 +1,7 @@
 %global php_inidir  %{_sysconfdir}/php.d
 %global pear_name   Crypt_GPG
 
-Name:       misp-php74-pear-crypt-gpg
+Name:       misp-php82-pear-crypt-gpg
 Version:    1.6.7
 Release:    1%{?dist}
 Summary:    PHP extension for interfacing crypt-gpg
@@ -13,10 +13,9 @@ Source0:    http://download.pear.php.net/get/%{pear_name}-%{version}.tgz
 
 BuildArch:	noarch
 
-BuildRequires:  php >= 7.4, php < 8, php-devel >= 7.4 , php-devel < 8
-BuildRequires:	php-cli >= 7.4, php-cli < 8
-BuildRequires: 	php-pear
-Requires:       php >= 7.4, php < 8, php-pear
+BuildRequires:  php, php-devel
+BuildRequires:	php-cli, php-pear
+Requires:       php, php-pear
 
 %description
 PHP extension for interfacing crypt-gpg
@@ -46,5 +45,5 @@ pear -d php_dir=/usr/share/pear install --nodeps --packagingroot $RPM_BUILD_ROOT
 %exclude /tmp/Crypt
 
 %changelog
-* Thu Sep 5 2024 Andreas Muehlemann <amuehlem@gmail.com> - 5.3.7
-- first version for rh-php74
+* Fri Dec 20 2024 Andreas Muehlemann <amuehlem@gmail.com> - 5.3.7
+- first version for RHEL8
