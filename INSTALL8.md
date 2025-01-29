@@ -34,23 +34,6 @@ dnf module enable mariadb:10.11
 dnf module enable php:7.4
 dnf module enable mariadb:10.11
 ```
-
-make sure you'll adjust the php74 and misp-2.4.X versions where necessary
-
-make sure you'll adjust the php74 and misp-2.4.X versions where necessary
-
-make sure you'll adjust the php74 and misp-2.4.X versions where necessary
-
-make sure you'll adjust the php74 and misp-2.4.X versions where necessary
-
-make sure you'll adjust the php74 and misp-2.4.X versions where necessary
-
-make sure you'll adjust the php74 and misp-2.4.X versions where necessary
-
-make sure you'll adjust the php74 and misp-2.4.X versions where necessary
-
-make sure you'll adjust the php74 and misp-2.4.X versions where necessary
-
 make sure you'll adjust the php74 and misp-2.4.X versions where necessary
 
 ## install provided RPMs
