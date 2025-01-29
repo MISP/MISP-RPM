@@ -24,9 +24,34 @@ subscription-manager repos --enable=codeready-builder-for-rhel-8-x86_64-rpms
 ## enable specific software modules
 
 ```
+dnf module enable php:8.2
+dnf module enable mariadb:10.11
+```
+
+### for the older 2.4.X branch with PHP7 support
+
+```
 dnf module enable php:7.4
 dnf module enable mariadb:10.11
 ```
+
+make sure you'll adjust the php74 and misp-2.4.X versions where necessary
+
+make sure you'll adjust the php74 and misp-2.4.X versions where necessary
+
+make sure you'll adjust the php74 and misp-2.4.X versions where necessary
+
+make sure you'll adjust the php74 and misp-2.4.X versions where necessary
+
+make sure you'll adjust the php74 and misp-2.4.X versions where necessary
+
+make sure you'll adjust the php74 and misp-2.4.X versions where necessary
+
+make sure you'll adjust the php74 and misp-2.4.X versions where necessary
+
+make sure you'll adjust the php74 and misp-2.4.X versions where necessary
+
+make sure you'll adjust the php74 and misp-2.4.X versions where necessary
 
 ## install provided RPMs
 
@@ -36,10 +61,10 @@ sudo yum install -y gtcaca-*.rpm libcaca*.rpm imlib2*.rpm
 sudo yum install -y faup-*.rpm
 sudo yum install -y ssdeep-libs*.rpm
 sudo yum install -y libbrotli*.rpm
-sudo yum install -y misp-php74-*rpm
+sudo yum install -y misp-php82-*rpm
 
 # install misp rpm
-sudo yum install -y misp-python-virtualenv-2.4.*.rpm misp-2.4.*.rpm
+sudo yum install -y misp-python-virtualenv-2.5.*.rpm misp-2.5.*.rpm
 ```
 
 ## Adjust PHP settings
