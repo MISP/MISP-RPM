@@ -10,13 +10,14 @@
 # exclude for requirements
 %global __requires_exclude ^/opt/python/cp3.*
 
-%define pymispver 2.5.0
-%define mispstixver 2.4.196
-%define pythonver python3.8
-%define pythonver_short python38
+%define pymispver 2.5.4
+%define mispstixver 2025.01.10
+%define pythonver python3.9
+%define pythonver_short python39
+%define phpbasever php82
 
 Name:	    	misp
-Version:	2.5.0
+Version:	2.5.4
 release:	1%{?dist}
 Summary:	MISP - malware information sharing platform
 
@@ -38,7 +39,7 @@ BuildRequires:	/usr/bin/pathfix.py
 BuildRequires:  git, %{pythonver_short}-devel, %{pythonver_short}-pip
 BuildRequires:  libxslt-devel, zlib-devel
 BuildRequires:  php, php-cli, php-xml
-BuildRequires:	php-mbstring, php-json
+BuildRequires:	php-mbstring
 BuildRequires:	ssdeep-libs, ssdeep-devel
 BuildRequires:	cmake3, bash-completion
 BuildRequires:	libcaca-devel, wget
@@ -46,11 +47,11 @@ Requires:	httpd, mod_ssl, redis, libxslt, zlib
 Requires:	mariadb, mariadb-server
 Requires:       php, php-cli, php-gd, php-pdo
 Requires:	php-mysqlnd, php-mbstring, php-xml
-Requires:	php-bcmath, php-opcache, php-json
+Requires:	php-bcmath, php-opcache
 Requires:	php-pecl-zip, php-intl
-Requires:	misp-php74-pecl-ssdeep, php-process
-Requires:	php-pecl-apcu, misp-php74-pecl-brotli, misp-php74-pecl-rdkafka
-Requires:	misp-php74-pear-crypt-gpg, misp-php74-pear-command-line
+Requires:	misp-%{phpbasever}-pecl-ssdeep, php-process
+Requires:	php-pecl-apcu, misp-%{phpbasever}-pecl-brotli, misp-%{phpbasever}-pecl-rdkafka
+Requires:	misp-%{phpbasever}-pear-crypt-gpg, misp-%{phpbasever}-pear-command-line
 Requires:	faup, gtcaca
 
 %package python-virtualenv
@@ -94,7 +95,7 @@ cp core.default.php core.php
 cp database.default.php database.php
 
 # create python3 virtualenv
-python3.8 -m venv --copies $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv
+%{pythonver} -m venv --copies $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv
 
 $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U pip setuptools
 
@@ -270,6 +271,14 @@ semodule -i /usr/share/MISP/policy/selinux/misp-ps.pp
 semodule -i /usr/share/MISP/policy/selinux/misp-workers8.pp
 
 %changelog
+* Mon Feb 3 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.4
+- update to 2.5.4
+- update to 2.5.3, misp-stix-2025.01.10
+- update to 2.5.2, misp-stix-2025.01.09
+
+* Wed Jan 29 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.1
+- update to 2.5.1
+
 * Mon Dec 23 2024 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.0
 - first version for RHEL8
 
