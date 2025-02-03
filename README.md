@@ -15,6 +15,11 @@ Please report issues on this branch to https://github.com/MISP/MISP-RPM and not
 to the original developers.
 
 ## History
+### Feb 3 2025
+- release 2.5.1-1-el8
+- release 2.5.2-1-el8
+- release 2.5.3-1-el8
+
 ### Jan 29 2025
 - release 2.5.0-1-el8, misp for RHEL8 with PHP82
 
