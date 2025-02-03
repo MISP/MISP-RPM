@@ -19,6 +19,8 @@ to the original developers.
 - release 2.5.1-1-el8
 - release 2.5.2-1-el8
 - release 2.5.3-1-el8
+- release 2.5.4-1-el8
+- release 2.5.5-1-el8
 
 ### Jan 29 2025
 - release 2.5.0-1-el8, misp for RHEL8 with PHP82
