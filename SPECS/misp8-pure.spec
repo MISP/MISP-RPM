@@ -17,7 +17,7 @@
 %define phpbasever php82
 
 Name:	    	misp
-Version:	2.5.4
+Version:	2.5.6
 release:	1%{?dist}
 Summary:	MISP - malware information sharing platform
 
@@ -271,7 +271,9 @@ semodule -i /usr/share/MISP/policy/selinux/misp-ps.pp
 semodule -i /usr/share/MISP/policy/selinux/misp-workers8.pp
 
 %changelog
-* Mon Feb 3 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.4
+* Mon Feb 3 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.6
+- update to 2.5.6
+- update to 2.5.5
 - update to 2.5.4
 - update to 2.5.3, misp-stix-2025.01.10
 - update to 2.5.2, misp-stix-2025.01.09
