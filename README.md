@@ -15,7 +15,7 @@ Please report issues on this branch to https://github.com/MISP/MISP-RPM and not
 to the original developers.
 
 ## RHEL8
-The RHEL8 version can be found in the [rehl810](https://github.com/MISP/MISP-RPM/tree/rhel810) branch. Please switch to this branch if you want to see the corresponding files for RHEL8.
+The RHEL8 version can be found in the [rehl8](https://github.com/MISP/MISP-RPM/tree/rhel8) branch. Please switch to this branch if you want to see the corresponding files for RHEL8.
 
 ## History
 ### Sep 20 2024
