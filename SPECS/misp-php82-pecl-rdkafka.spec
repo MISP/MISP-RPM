@@ -45,5 +45,5 @@ install -D -m 644 %{pecl_name}.ini %{buildroot}/etc/php.d/%{pecl_name}.ini
 %config(noreplace) /etc/php.d/%{pecl_name}.ini
 
 %changelog
-* Thu Sep 5 2024 Andreas Muehlemann <amuehlem@gmail.com> - 5.3.7
+* Tue Feb 4 2025 Andreas Muehlemann <amuehlem@gmail.com> - 5.3.7
 - first version for rh-php74

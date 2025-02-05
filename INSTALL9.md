@@ -32,14 +32,15 @@ dnf module enable mariadb:10.11
 
 ```
 # prereq for misp
-sudo yum install -y gtcaca-*.rpm libcaca*.rpm imlib2*.rpm
-sudo yum install -y faup-*.rpm
-sudo yum install -y ssdeep-libs*.rpm
-sudo yum install -y libbrotli*.rpm
-sudo yum install -y misp-php82-*rpm
+sudo dnf install -y gtcaca-*.rpm libcaca*.rpm imlib2*.rpm
+sudo dnf install -y faup-*.rpm
+sudo dnf install -y ssdeep-libs*.rpm
+sudo dnf install -y libbrotli*.rpm
+sudo dnf install -y misp-php82-*rpm
+sudo dnf install php-mysqlnd
 
 # install misp rpm
-sudo yum install -y misp-python-virtualenv-2.5.*.rpm misp-2.5.*.rpm
+sudo dnf install -y misp-python-virtualenv-2.5.*.rpm misp-2.5.*.rpm
 ```
 
 ## Adjust PHP settings
@@ -73,7 +74,7 @@ sudo chcon -t httpd_sys_rw_content_t /var/www/MISP/app/Config/config.php
 It's recommended to secure mariadb with the provided script
 
 ```
-mysql_secure_installation
+mariadb-secure-installation
 ```
 
 Now you can create the MISP database
@@ -89,7 +90,7 @@ exit;
 Install the base database schema
 
 ```
-mysql -u misp -p misp < /var/www/MISP/INSTALL/MYSQL.sql
+mariadb -u misp -p misp < /var/www/MISP/INSTALL/MYSQL.sql
 ```
 
 ## enable services

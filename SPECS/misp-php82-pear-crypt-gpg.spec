@@ -45,5 +45,5 @@ pear -d php_dir=/usr/share/pear install --nodeps --packagingroot $RPM_BUILD_ROOT
 %exclude /tmp/Crypt
 
 %changelog
-* Fri Dec 20 2024 Andreas Muehlemann <amuehlem@gmail.com> - 5.3.7
+* Tue Feb 4 2025 Andreas Muehlemann <amuehlem@gmail.com> - 5.3.7
 - first version for RHEL8

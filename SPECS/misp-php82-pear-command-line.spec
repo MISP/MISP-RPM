@@ -53,5 +53,5 @@ pear -d php_dir=/usr/share/pear install --nodeps --packagingroot $RPM_BUILD_ROOT
 %exclude /var/lib/pear/.lock
 
 %changelog
-* Fri Dec 20 2024 Andreas Muehlemann <amuehlem@gmail.com> - 1.2.2
+* Tue Feb 4 2025 Andreas Muehlemann <amuehlem@gmail.com> - 1.2.2
 - first version for RHEL8
