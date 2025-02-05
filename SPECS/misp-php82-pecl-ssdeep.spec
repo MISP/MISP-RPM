@@ -5,13 +5,14 @@
 
 Name:       misp-php82-pecl-ssdeep
 Version:    1.1.0
-Release:    1%{?dist}
+Release:    2%{?dist}
 Summary:    PHP extension for interfacing ssdeep
 
 Group:      Development/Languages
 License:    PHP
 URL:        https://github.com/phpssdeep/phpssdeep/
 Source0:    https://pecl.php.net/get/ssdeep-%{version}.tgz
+Source1:    ssdeep-2.14.1.tar.gz
 
 Patch0:	    https://patch-diff.githubusercontent.com/raw/php/pecl-text-ssdeep/pull/2.patch
 
@@ -26,6 +27,19 @@ PHP extension for interfacing ssdeep
 %prep
 %setup -q -n ssdeep-%{version}
 
+cd ..
+tar xzf %{SOURCE1}
+cd ssdeep-2.14.1
+touch -r aclocal.m4 configure configure.ac
+%configure \
+   --disable-auto-search \
+   --disable-static
+sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
+sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
+make %{?_smp_mflags}
+
+cd ../ssdeep-%{version}
+
 # create the ini file
 cat > %{pecl_name}.ini << EOF
 extension=%{pecl_name}.so
@@ -38,7 +52,7 @@ patch -p1 < %{PATCH0}
 # ssdeep hard codes /usr/lib for libfuzzy.so
 phpize
 ./configure \
-    --with-ssdeep=%{_libdir} \
+    --with-ssdeep=../ssdeep-2.14.1 \
     --with-php-config=/usr/bin/php-config
 make %{?_smp_mflags}
 
@@ -49,7 +63,8 @@ install -D -m 644 %{pecl_name}.ini %{buildroot}/etc/php.d/%{pecl_name}.ini
 %files
 %{php_extdir}/%{pecl_name}.so
 %config(noreplace) /etc/php.d/%{pecl_name}.ini
+%exclude /usr/lib/.build-id*
 
 %changelog
-* Thu Sep 5 2024 Andreas Muehlemann <amuehlem@gmail.com> - 5.3.7
-- first version for php74
+* Tue Feb 4 2025 Andreas Muehlemann <amuehlem@gmail.com> - 5.3.7
+- first version for php82

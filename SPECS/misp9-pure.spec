@@ -1,57 +1,59 @@
 %global __python %{__python3}
+%global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 %global _python_bytecompile_extra 0
 %global debug_package %{nil}
 %define _build_id_links none
 %define _binaries_in_noarch_packages_terminate_build 0
 # disable mangling of shebangs #!
 %define __brp_mangle_shebangs /usr/bin/true
-%global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
-
 # exclude for requirements
 %global __requires_exclude ^/opt/python/cp3.*
 
-%define pymispver 2.4.198
-%define mispstixver 2.4.196
-%define pythonver python3.8
-%define pythonver_short python38
+%define pymispver 2.5.0
+%define mispstixver 2.4.169
+%define pythonver python3.9
+%define pythonver_short python39
+%define python_bin python3.9
+%define phpver 82
 
-Name:	    	misp
-Version:	2.4.198
-release:	1%{?dist}
+Name:		misp
+Version:	2.5.0
+Release: 	0%{?dist}
 Summary:	MISP - malware information sharing platform
 
 Group:		Internet Applications
 License:	GPLv3
 URL:		http://www.misp-project.org/
-Source1:    	misp.conf
-Source2:    	misp-httpd.pp
-Source3:    	misp-bash.pp
-Source4:    	misp-ps.pp
-Source5:    	misp-workers.service
-Source6:    	start-misp-workers.sh
-Source7:	misp-workers.ini
-Source8:	misp-workers8.pp
-Patch0:     	MISP-AppModel.php.patch
-Patch1: 	misp-2.4.177-fix-composer-config.patch
+Source1:	misp.conf
+Source2:        misp-httpd.pp
+Source3:        misp-bash.pp
+Source4:        misp-ps.pp
+Source5:        misp-workers.service
+Source6:        start-misp-workers.sh
+Source7:        misp-workers.ini
+Source8:        misp-workers8.pp
+Patch0:         MISP-AppModel.php.patch
+Patch1:         misp-2.4.177-fix-composer-config.patch
 
 BuildRequires:	/usr/bin/pathfix.py
-BuildRequires:  git, %{pythonver_short}-devel, %{pythonver_short}-pip
-BuildRequires:  libxslt-devel, zlib-devel
+BuildRequires:	git, python3-devel, python3-pip
+BuildRequires:	libxslt-devel, zlib-devel
+BuildRequires:	bash-completion
 BuildRequires:  php, php-cli, php-xml
-BuildRequires:	php-mbstring, php-json
-BuildRequires:	ssdeep-libs, ssdeep-devel
-BuildRequires:	cmake3, bash-completion
-BuildRequires:	libcaca-devel, wget
-Requires:	httpd, mod_ssl, redis, libxslt, zlib
-Requires:	mariadb, mariadb-server
+BuildRequires:  php-mbstring, php-json
+BuildRequires:  ssdeep-libs, ssdeep-devel
+BuildRequires:  cmake3, bash-completion
+BuildRequires:  libcaca-devel, wget
+Requires:       httpd, mod_ssl, redis, libxslt, zlib
+Requires:       mariadb, mariadb-server
 Requires:       php, php-cli, php-gd, php-pdo
-Requires:	php-mysqlnd, php-mbstring, php-xml
-Requires:	php-bcmath, php-opcache, php-json
-Requires:	php-pecl-zip, php-intl
-Requires:	misp-php74-pecl-ssdeep, php-process
-Requires:	php-pecl-apcu, misp-php74-pecl-brotli, misp-php74-pecl-rdkafka
-Requires:	misp-php74-pear-crypt-gpg, misp-php74-pear-command-line
-Requires:	faup, gtcaca
+Requires:       php-mysqlnd, php-mbstring, php-xml
+Requires:       php-bcmath, php-opcache, php-json
+Requires:       php-pecl-zip, php-intl
+Requires:       misp-php%{phpver}-pecl-ssdeep, php-process
+Requires:       php-pecl-apcu, misp-php%{phpver}-pecl-brotli, misp-php%{phpver}-pecl-rdkafka
+Requires:       misp-php%{phpver}-pear-crypt-gpg, misp-php%{phpver}-pear-command-line
+Requires:       faup, gtcaca
 
 %package python-virtualenv
 Summary: 	the python virtual environment for MISP
@@ -81,7 +83,8 @@ patch --ignore-whitespace -p0 < %{PATCH0}
 patch --ignore-whitespace -p0 < %{PATCH1}
 
 %build
-# intentionally left blank
+#intentionally left blank
+
 %install
 mkdir -p $RPM_BUILD_ROOT/var/www
 cp -r MISP $RPM_BUILD_ROOT/var/www/MISP
@@ -94,7 +97,7 @@ cp core.default.php core.php
 cp database.default.php database.php
 
 # create python3 virtualenv
-python3.8 -m venv --copies $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv
+%{python_bin} -m venv --copies $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv
 
 $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U pip setuptools
 
@@ -201,6 +204,7 @@ install -m 644 %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/systemd/system
 mkdir -p $RPM_BUILD_ROOT/usr/local/sbin
 install -m 755 %{SOURCE6} $RPM_BUILD_ROOT/usr/local/sbin
 chmod g+w $RPM_BUILD_ROOT/var/www/MISP/app/Config
+
 mkdir -p $RPM_BUILD_ROOT/etc/supervisord.d
 install -m 644 %{SOURCE7} $RPM_BUILD_ROOT/etc/supervisord.d
 
@@ -210,27 +214,14 @@ install -m 644 %{SOURCE7} $RPM_BUILD_ROOT/etc/supervisord.d
 %exclude /var/www/cgi-bin/misp-virtualenv/*.pyc
 
 %files
-%defattr(-,root,root,-)
-%doc MISP/{AUTHORS,CITATION.cff,code_of_conduct.md,CODINGSTYLE.md,CONTRIBUTING.md,GITWORKFLOW.md,README.md,ROADMAP.md,SECURITY.md}
-%license MISP/LICENSE
-/var/www/MISP
-# configuration directory: read or read/write permission, through group ownership
-%dir %attr(0775,root,apache) /var/www/MISP/app/Config
-%config(noreplace) %attr(0640,root,apache) /var/www/MISP/app/Config/bootstrap.php
-%config(noreplace) %attr(0660,root,apache) /var/www/MISP/app/Config/config.php
-%config(noreplace) %attr(0640,root,apache) /var/www/MISP/app/Config/core.php
-%config(noreplace) %attr(0640,root,apache) /var/www/MISP/app/Config/database.php
-%config(noreplace) %attr(0640,root,apache) /var/www/MISP/app/Config/email.php
-%config(noreplace) %attr(0640,root,apache) /var/www/MISP/app/Config/routes.php
+%defattr(-,apache,apache,-)
 %config(noreplace) /var/www/MISP/app/Plugin/CakeResque/Config/config.php
-# data directories: full read/write access, through user ownership
-%attr(-,apache,apache) /var/www/MISP/app/tmp
-%attr(-,apache,apache) /var/www/MISP/app/files
-%attr(-,apache,apache) /var/www/MISP/app/Plugin/CakeResque/tmp
+/var/www/MISP
 %config(noreplace) /etc/httpd/conf.d/misp.conf
 %config(noreplace) /etc/supervisord.d/misp-workers.ini
 /usr/share/MISP/policy/selinux/misp-*.pp
 %{_sysconfdir}/systemd/system/misp-workers.service
+%defattr(-,root,root,-)
 /usr/local/sbin/start-misp-workers.sh
 # exclude test files whicht get detected by AV solutions
 %exclude /var/www/MISP/PyMISP/tests
@@ -266,15 +257,7 @@ semanage fcontext -a -t httpd_sys_rw_content_t '/var/www/MISP/app/Lib/cakephp/li
 restorecon -v '/var/www/MISP/app/Lib/cakephp/lib/Cake/Config/config.php'
 semanage fcontext -a -t httpd_sys_rw_content_t '/var/www/MISP/app/Plugin/CakeResque/Config/config.default.php'
 restorecon -v '/var/www/MISP/app/Plugin/CakeResque/Config/config.php'
-semodule -i /usr/share/MISP/policy/selinux/misp-httpd.pp
-semodule -i /usr/share/MISP/policy/selinux/misp-bash.pp
-semodule -i /usr/share/MISP/policy/selinux/misp-ps.pp
-semodule -i /usr/share/MISP/policy/selinux/misp-workers8.pp
 
 %changelog
-* Wed Sep 18 2024 Andreas Muehlemann <amuehlem@gmail.com> - 2.4.198
-- update to v2.4.198
-
-* Thu Sep 5 2024 Andreas Muehlemann <amuehlem@gmail.com> - 2.4.197
-- first version for RHEL8
-
+* Wed Nov 27 2024 Andreas Muehlemann <amuehlem@gmail.com> - 2.4.200
+- first version for RHEL9-pure (no EPEL or REMI PHP repo)
