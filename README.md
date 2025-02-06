@@ -18,3 +18,4 @@ to the original developers.
 ### Feb 6 2025
 - release 2.5.0-1-el9
 - release 2.5.1-1-el9
+- release 2.5.2-1-el9

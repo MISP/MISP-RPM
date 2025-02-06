@@ -9,7 +9,7 @@
 # exclude for requirements
 %global __requires_exclude ^/opt/python/cp3.*
 
-%define pymispver 2.5.1
+%define pymispver 2.5.2
 %define mispstixver 2.4.196
 %define pythonver python3.9
 %define pythonver_short python39
@@ -17,7 +17,7 @@
 %define phpver 82
 
 Name:		misp
-Version:	2.5.1
+Version:	2.5.2
 Release: 	1%{?dist}
 Summary:	MISP - malware information sharing platform
 
@@ -224,6 +224,7 @@ install -m 644 %{SOURCE7} $RPM_BUILD_ROOT/etc/supervisord.d
 %config(noreplace) %attr(0660,root,apache) /var/www/MISP/app/Config/config.php
 %config(noreplace) %attr(0640,root,apache) /var/www/MISP/app/Config/core.php
 %config(noreplace) %attr(0640,root,apache) /var/www/MISP/app/Config/database.php
+%config(noreplace) %attr(0640,root,apache) /var/www/MISP/app/Config/email.php
 %config(noreplace) /var/www/MISP/app/Plugin/CakeResque/Config/config.php
 # data directories: full read/write access, through user ownership
 %attr(-,apache,apache) /var/www/MISP/app/tmp
@@ -270,6 +271,9 @@ semanage fcontext -a -t httpd_sys_rw_content_t '/var/www/MISP/app/Plugin/CakeRes
 restorecon -v '/var/www/MISP/app/Plugin/CakeResque/Config/config.php'
 
 %changelog
+* Thu Feb 6 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.2
+- update to 2.5.2
+
 * Wed Feb 5 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.1
 - first version for RHEL9-pure (no EPEL or REMI PHP repo)
 - update to 2.5.1
