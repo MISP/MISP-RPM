@@ -9,7 +9,7 @@
 # exclude for requirements
 %global __requires_exclude ^/opt/python/cp3.*
 
-%define pymispver 2.5.4
+%define pymispver 2.5.5
 %define mispstixver 2025.01.10
 %define pythonver python3.9
 %define pythonver_short python39
@@ -17,7 +17,7 @@
 %define phpver 82
 
 Name:		misp
-Version:	2.5.4
+Version:	2.5.5
 Release: 	1%{?dist}
 Summary:	MISP - malware information sharing platform
 
@@ -275,6 +275,7 @@ restorecon -v '/var/www/MISP/app/Plugin/CakeResque/Config/config.php'
 - update to 2.5.2
 - update to 2.5.3
 - update to 2.5.4
+- update to 2.5.5
 
 * Wed Feb 5 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.1
 - first version for RHEL9-pure (no EPEL or REMI PHP repo)
