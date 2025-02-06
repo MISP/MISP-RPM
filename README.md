@@ -21,3 +21,4 @@ to the original developers.
 - release 2.5.2-1-el9
 - release 2.5.3-1-el9
 - release 2.5.4-1-el9
+- release 2.5.5-1-el9
