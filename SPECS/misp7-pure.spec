@@ -6,7 +6,8 @@
 %define __brp_mangle_shebangs /usr/bin/true
 
 # upstream MISP main version
-%define mispver 2.4.198
+%define mispver 2.4.204
+%define pymispver 2.4.198
 # you can ship package level releases with the Release version value
 # defaults to -1.el7 for RHEL7
 %define rpmver 1
@@ -119,7 +120,7 @@ for pymod in zmq redis python-magic plyara pydeep lief; do
 	$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U $pymod
 done
 
-$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U $RPM_BUILD_ROOT/var/www/MISP/PyMISP
+$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U pymisp==%{pymispver}
 
 # virtualenv PATH mess fixup
 rm -rf $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/__pycache__
@@ -200,6 +201,9 @@ semodule -i /usr/share/MISP/policy/selinux/misp-bash.pp
 semodule -i /usr/share/MISP/policy/selinux/misp-ps.pp
 
 %changelog
+* Thu Feb 6 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.4.204
+- update to 2.4.204
+
 * Fri Sep 20 2024 Andreas Muehlemann <amuehlem@gmail.com> - 2.4.198
 - update to 2.4.198
 
