@@ -9,16 +9,16 @@
 # exclude for requirements
 %global __requires_exclude ^/opt/python/cp3.*
 
-%define pymispver 2.5.0
-%define mispstixver 2.4.169
+%define pymispver 2.5.1
+%define mispstixver 2.4.196
 %define pythonver python3.9
 %define pythonver_short python39
 %define python_bin python3.9
 %define phpver 82
 
 Name:		misp
-Version:	2.5.0
-Release: 	0%{?dist}
+Version:	2.5.1
+Release: 	1%{?dist}
 Summary:	MISP - malware information sharing platform
 
 Group:		Internet Applications
@@ -215,13 +215,24 @@ install -m 644 %{SOURCE7} $RPM_BUILD_ROOT/etc/supervisord.d
 
 %files
 %defattr(-,apache,apache,-)
-%config(noreplace) /var/www/MISP/app/Plugin/CakeResque/Config/config.php
+%doc MISP/{AUTHORS,CITATION.cff,code_of_conduct.md,CODINGSTYLE.md,CONTRIBUTING.md,GITWORKFLOW.md,README.md,ROADMAP.md,SECURITY.md}
+%license MISP/LICENSE
 /var/www/MISP
+# configuration directory: read or read/write permission, through group ownership
+%dir %attr(0775,root,apache) /var/www/MISP/app/Config
+%config(noreplace) %attr(0640,root,apache) /var/www/MISP/app/Config/bootstrap.php
+%config(noreplace) %attr(0660,root,apache) /var/www/MISP/app/Config/config.php
+%config(noreplace) %attr(0640,root,apache) /var/www/MISP/app/Config/core.php
+%config(noreplace) %attr(0640,root,apache) /var/www/MISP/app/Config/database.php
+%config(noreplace) /var/www/MISP/app/Plugin/CakeResque/Config/config.php
+# data directories: full read/write access, through user ownership
+%attr(-,apache,apache) /var/www/MISP/app/tmp
+%attr(-,apache,apache) /var/www/MISP/app/files
+%attr(-,apache,apache) /var/www/MISP/app/Plugin/CakeResque/tmp
 %config(noreplace) /etc/httpd/conf.d/misp.conf
 %config(noreplace) /etc/supervisord.d/misp-workers.ini
 /usr/share/MISP/policy/selinux/misp-*.pp
 %{_sysconfdir}/systemd/system/misp-workers.service
-%defattr(-,root,root,-)
 /usr/local/sbin/start-misp-workers.sh
 # exclude test files whicht get detected by AV solutions
 %exclude /var/www/MISP/PyMISP/tests
@@ -259,5 +270,6 @@ semanage fcontext -a -t httpd_sys_rw_content_t '/var/www/MISP/app/Plugin/CakeRes
 restorecon -v '/var/www/MISP/app/Plugin/CakeResque/Config/config.php'
 
 %changelog
-* Wed Nov 27 2024 Andreas Muehlemann <amuehlem@gmail.com> - 2.4.200
+* Wed Feb 5 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.1
 - first version for RHEL9-pure (no EPEL or REMI PHP repo)
+- update to 2.5.1
