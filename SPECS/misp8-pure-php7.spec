@@ -10,7 +10,7 @@
 # exclude for requirements
 %global __requires_exclude ^/opt/python/cp3.*
 
-%define pymispver 2.4.202
+%define pymispver 2.4.198
 %define mispstixver 2.4.196
 %define pythonver python3.8
 %define pythonver_short python38
@@ -99,7 +99,7 @@ python3.8 -m venv --copies $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv
 $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U pip setuptools
 
 $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install ordered-set python-dateutil six weakrefmethod
-$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install $RPM_BUILD_ROOT/var/www/MISP/app/files/scripts/misp-stix
+$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U misp-stix==%{mispstixver}
 
 cd $RPM_BUILD_ROOT/var/www/MISP/app/files/scripts/python-cybox
 git config core.filemode false
@@ -129,7 +129,7 @@ $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U pydeep
 $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U lief
 
 cd $RPM_BUILD_ROOT/var/www/MISP/PyMISP
-$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U .
+$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U pymisp==%{pymispver}
 
 # CakePHP
 cd $RPM_BUILD_ROOT/var/www/MISP/app
@@ -273,7 +273,7 @@ semodule -i /usr/share/MISP/policy/selinux/misp-workers8.pp
 
 %changelog
 * Thu Feb 6 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.4.204
-- update to 2.4.204, pymisp v2.4.202
+- update to 2.4.204, pymisp v2.4.198
 
 * Wed Sep 18 2024 Andreas Muehlemann <amuehlem@gmail.com> - 2.4.198
 - update to v2.4.198
