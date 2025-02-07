@@ -18,6 +18,9 @@ to the original developers.
 The RHEL8 version can be found in the [rehl8](https://github.com/MISP/MISP-RPM/tree/rhel8) branch. Please switch to this branch if you want to see the corresponding files for RHEL8.
 
 ## History
+### Feb 7 2025
+- release 2.4.204
+
 ### Sep 20 2024
 - release 2.4.198-1 for RHEL7
 - release 2.4.198-1-el8, first version for RHEL8 systems
