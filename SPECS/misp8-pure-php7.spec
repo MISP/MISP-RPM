@@ -16,7 +16,7 @@
 %define pythonver_short python38
 
 Name:	    	misp
-Version:	2.4.204
+Version:	2.4.205
 release:	1%{?dist}
 Summary:	MISP - malware information sharing platform
 
@@ -99,7 +99,7 @@ python3.8 -m venv --copies $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv
 $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U pip setuptools
 
 $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install ordered-set python-dateutil six weakrefmethod
-$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U misp-stix==%{mispstixver}
+$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install $RPM_BUILD_ROOT/var/www/MISP/app/files/scripts/misp-stix
 
 cd $RPM_BUILD_ROOT/var/www/MISP/app/files/scripts/python-cybox
 git config core.filemode false
@@ -272,8 +272,8 @@ semodule -i /usr/share/MISP/policy/selinux/misp-ps.pp
 semodule -i /usr/share/MISP/policy/selinux/misp-workers8.pp
 
 %changelog
-* Thu Feb 6 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.4.204
-- update to 2.4.204, pymisp v2.4.198
+* Mon Feb 24 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.4.205
+- update to v2.4.205
 
 * Wed Sep 18 2024 Andreas Muehlemann <amuehlem@gmail.com> - 2.4.198
 - update to v2.4.198
