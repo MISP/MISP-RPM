@@ -17,6 +17,7 @@ to the original developers.
 ## History
 ### May 14
 - release 2.5.11-el9
+- release 2.5.12-el9
 
 ### Apr 9 2025
 - release 2.5.10-el9
