@@ -11,7 +11,7 @@
 %global __requires_exclude ^/opt/python/cp3.*
 
 %define pymispver 2.4.198
-%define mispstixver 2025.5.13
+%define mispstixver 2025.02.14
 %define pythonver python3.8
 %define pythonver_short python38
 
