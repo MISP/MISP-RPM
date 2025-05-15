@@ -11,7 +11,7 @@
 %global __requires_exclude ^/opt/python/cp3.*
 
 %define pymispver 2.4.198
-%define mispstixver 2025.02.14
+%define mispstixver 2.4.196.1
 %define pythonver python3.8
 %define pythonver_short python38
 
@@ -99,7 +99,9 @@ python3.8 -m venv --copies $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv
 $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U pip setuptools
 
 $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install ordered-set python-dateutil six weakrefmethod
-$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install $RPM_BUILD_ROOT/var/www/MISP/app/files/scripts/misp-stix
+
+#$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install $RPM_BUILD_ROOT/var/www/MISP/app/files/scripts/misp-stix
+$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install misp-stix==%{mispstixver}
 
 cd $RPM_BUILD_ROOT/var/www/MISP/app/files/scripts/python-cybox
 git config core.filemode false
@@ -129,7 +131,12 @@ $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U pydeep
 $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U lief
 
 cd $RPM_BUILD_ROOT/var/www/MISP/PyMISP
-$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U pymisp==%{pymispver}
+git clone https://github.com/MISP/PyMISP.git
+cd $RPM_BUILD_ROOT/var/www/MISP/PyMISP/PyMISP
+git checkout v%{pymispver}
+git submodule update --init
+#patch -p1 < %{PATCH2}
+$RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/pip install -U .
 
 # CakePHP
 cd $RPM_BUILD_ROOT/var/www/MISP/app

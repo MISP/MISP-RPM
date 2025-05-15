@@ -18,6 +18,7 @@ to the original developers.
 ### May 14 2025
 - release 2.5.11-el8
 - release 2.5.12-el8
+- release 2.4.10-el8
 
 ### Apr 9 2025
 - release 2.5.10-el8
