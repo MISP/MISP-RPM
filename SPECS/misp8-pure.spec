@@ -11,7 +11,7 @@
 %global __requires_exclude ^/opt/python/cp3.*
 
 %define pymispver 2.5.12
-%define mispstixver 2025.5.13
+%define mispstixver 2025.6.12
 %define pythonver python3.9
 %define pythonver_short python39
 %define phpbasever php82
@@ -271,7 +271,7 @@ semodule -i /usr/share/MISP/policy/selinux/misp-ps.pp
 semodule -i /usr/share/MISP/policy/selinux/misp-workers8.pp
 
 %changelog
-* Wed May 14 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.13
+* Fri Jun 13 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.13
 - update to 2.5.13
 
 * Wed May 14 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.12
