@@ -17,7 +17,7 @@
 %define phpver 82
 
 Name:		misp
-Version:	2.5.13
+Version:	2.5.14
 Release: 	1%{?dist}
 Summary:	MISP - malware information sharing platform
 
@@ -271,6 +271,10 @@ semanage fcontext -a -t httpd_sys_rw_content_t '/var/www/MISP/app/Plugin/CakeRes
 restorecon -v '/var/www/MISP/app/Plugin/CakeResque/Config/config.php'
 
 %changelog
+* Thu Jun 19 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.14
+- update to 2.5.14
+- adding jakub-onderka/openid-connect-php php dependency
+
 * Fri Jun 13 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.13
 - update to 2.5.13
 
