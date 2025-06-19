@@ -17,7 +17,7 @@
 %define phpbasever php82
 
 Name:	    	misp
-Version:	2.5.13
+Version:	2.5.14
 release:	1%{?dist}
 Summary:	MISP - malware information sharing platform
 
@@ -167,7 +167,7 @@ rm -f build-deb.sh
 rm -f requirements.txt
 rm -f Pipfile
 rm -f .coveragerc
-rm -f app/composer.*
+#rm -f app/composer.*
 rm -f app/Makefile
 rm -f app/update_thirdparty.sh
 
@@ -271,6 +271,10 @@ semodule -i /usr/share/MISP/policy/selinux/misp-ps.pp
 semodule -i /usr/share/MISP/policy/selinux/misp-workers8.pp
 
 %changelog
+* Thu Jun 19 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.14
+- update to 2.5.14
+- adding jakub-onderka/openid-connect-php php dependency
+
 * Fri Jun 13 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.13
 - update to 2.5.13
 
