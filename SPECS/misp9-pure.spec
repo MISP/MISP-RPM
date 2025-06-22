@@ -10,14 +10,14 @@
 %global __requires_exclude ^/opt/python/cp3.*
 
 %define pymispver 2.5.12
-%define mispstixver 2025.6.12
+%define mispstixver 2025.6.19
 %define pythonver python3.9
 %define pythonver_short python39
 %define python_bin python3.9
 %define phpver 82
 
 Name:		misp
-Version:	2.5.14
+Version:	2.5.15
 Release: 	1%{?dist}
 Summary:	MISP - malware information sharing platform
 
@@ -271,6 +271,9 @@ semanage fcontext -a -t httpd_sys_rw_content_t '/var/www/MISP/app/Plugin/CakeRes
 restorecon -v '/var/www/MISP/app/Plugin/CakeResque/Config/config.php'
 
 %changelog
+* Sun Jun 22 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.15
+- update to 2.5.15
+
 * Thu Jun 19 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.14
 - update to 2.5.14
 - adding jakub-onderka/openid-connect-php php dependency

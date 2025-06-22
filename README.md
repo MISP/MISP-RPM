@@ -15,6 +15,9 @@ Please report issues on this branch to https://github.com/MISP/MISP-RPM and not
 to the original developers.
 
 ## History
+### Jun 22
+- release 2.5.15-el9
+
 ### Jun 19
 - release 2.5.14-el9
 
