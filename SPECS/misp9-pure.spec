@@ -9,15 +9,15 @@
 # exclude for requirements
 %global __requires_exclude ^/opt/python/cp3.*
 
-%define pymispver 2.5.12
-%define mispstixver 2025.6.19
+%define pymispver 2.5.17
+%define mispstixver 2025.8.4
 %define pythonver python3.9
 %define pythonver_short python39
 %define python_bin python3.9
 %define phpver 82
 
 Name:		misp
-Version:	2.5.16
+Version:	2.5.17
 Release: 	1%{?dist}
 Summary:	MISP - malware information sharing platform
 
@@ -271,6 +271,9 @@ semanage fcontext -a -t httpd_sys_rw_content_t '/var/www/MISP/app/Plugin/CakeRes
 restorecon -v '/var/www/MISP/app/Plugin/CakeResque/Config/config.php'
 
 %changelog
+* Tue Aug 5 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.17
+- update to 2.5.17
+
 * Tue Jul 15 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.16
 - update to 2.5.16
 
