@@ -17,7 +17,7 @@
 %define phpver 82
 
 Name:		misp
-Version:	2.5.17
+Version:	2.5.18
 Release: 	1%{?dist}
 Summary:	MISP - malware information sharing platform
 
@@ -271,6 +271,9 @@ semanage fcontext -a -t httpd_sys_rw_content_t '/var/www/MISP/app/Plugin/CakeRes
 restorecon -v '/var/www/MISP/app/Plugin/CakeResque/Config/config.php'
 
 %changelog
+* Sat Aug 9 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.18
+- update to 2.5.18
+
 * Tue Aug 5 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.17
 - update to 2.5.17
 
