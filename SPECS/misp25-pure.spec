@@ -39,7 +39,7 @@
 %endif
 
 Name:		misp
-Version:	2.5.19
+Version:	2.5.20
 Release: 	1%{?dist}
 Summary:	MISP - malware information sharing platform
 
@@ -65,7 +65,7 @@ BuildRequires:  php, php-cli, php-xml
 BuildRequires:  php-mbstring, php-json
 BuildRequires:  ssdeep-libs, ssdeep-devel
 BuildRequires:  cmake3, bash-completion
-BuildRequires:  libcaca-devel, wget
+BuildRequires:  wget
 
 %if 0%{?rhel} < 9
 BuildRequires:  /usr/bin/pathfix.py
@@ -78,10 +78,9 @@ Requires:       php-cli, php-gd, php-pdo
 Requires:       php-mysqlnd, php-mbstring, php-xml
 Requires:       php-bcmath, php-opcache, php-json
 Requires:       php-pecl-zip, php-intl
-Requires:       misp-php%{phpver}-pecl-ssdeep, php-process
-Requires:       php-pecl-apcu, misp-php%{phpver}-pecl-brotli, misp-php%{phpver}-pecl-rdkafka
-Requires:       misp-php%{phpver}-pear-crypt-gpg, misp-php%{phpver}-pear-command-line
-Requires:       faup, gtcaca
+Requires:       misp-php-pecl-ssdeep, php-process
+Requires:       php-pecl-apcu, misp-php-pecl-brotli, misp-php-pecl-rdkafka
+Requires:       misp-php-pear-crypt-gpg, misp-php-pear-command-line
 
 # redis / valkey depending on rhel version
 %if 0%{?rhel} < 10
@@ -300,6 +299,10 @@ if [ SELINUXSTATUS != 'Disabled' ]; then
 fi
 
 %changelog
+* Sat Aug 30 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.20
+- update to 2.5.20
+- remove php version dependecies in required packages
+
 * Fri Aug 29 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.19
 - update to 2.5.19
 - sync to misp25.spec from amuehlem/MISP-RPM
