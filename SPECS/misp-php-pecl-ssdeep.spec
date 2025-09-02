@@ -2,11 +2,14 @@
 %global pecl_name   ssdeep
 %global pecl_xmldir /var/lib/pear/pkgxml
 %global php_extdir /usr/lib64/php/modules/
+%global __brp_check_rpaths %{nil}
 
-Name:       misp-php82-pecl-ssdeep
+Name:       misp-php-pecl-ssdeep
 Version:    1.1.0
 Release:    2%{?dist}
 Summary:    PHP extension for interfacing ssdeep
+
+Obsoletes:	misp-php82-pecl-ssdeep = 1.1.0
 
 Group:      Development/Languages
 License:    PHP
@@ -66,5 +69,8 @@ install -D -m 644 %{pecl_name}.ini %{buildroot}/etc/php.d/%{pecl_name}.ini
 %exclude /usr/lib/.build-id*
 
 %changelog
+* Sat Aug 30 2025 Andreas Muehlemann <amuehlem@gmail.com> - 1.2.2
+- renaming the package
+
 * Tue Feb 4 2025 Andreas Muehlemann <amuehlem@gmail.com> - 5.3.7
 - first version for php82
