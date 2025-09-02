@@ -17,7 +17,7 @@ to the original developers.
 ## History
 ### Sep 2
 - releas 2.5.20-el9
-- renaming misp-php82-* packages to misp-php-* (this simplifyes the build process to create this RPMs)
+- renaming misp-php82-* packages to misp-php-* (this simplifies the build process to create this RPMs)
 
 ### Aug 9
 - release 2.5.19-el8
