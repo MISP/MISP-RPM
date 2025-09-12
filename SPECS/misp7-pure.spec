@@ -4,6 +4,8 @@
 %define _binaries_in_noarch_packages_terminate_build 0
 # disable mangling of shebangs #!
 %define __brp_mangle_shebangs /usr/bin/true
+# exclude for requirements
+%global __requires_exclude ^/opt/python/cp3.*
 
 # upstream MISP main version
 %define mispver 2.4.204
@@ -37,6 +39,20 @@ BuildRequires:  rh-%{phprpm}-php-pear, rh-%{phprpm}-php-devel
 BuildRequires:  ssdeep-libs, ssdeep-devel
 BuildRequires:  librdkafka librdkafka-devel
 BuildRequires:	cmake3, bash-completion
+Source0:	fake-tgz.tgz
+Source1:        misp.conf
+Source2:        misp-httpd.pp
+Source3:        misp-bash.pp
+Source4:        misp-ps.pp
+Source5:        misp-workers.service
+Source6:        start-misp-workers.sh
+Source7:	misp-workers.ini
+Patch0:         MISP-AppModel.php.patch
+
+BuildRequires:	/usr/bin/pathfix.py
+BuildRequires:	git, misp-python, libxslt-devel, zlib-devel
+BuildRequires:	php74-php, php74-php-cli, php74-php-xml, php74-php-mbstring
+BuildRequires:	ssdeep-devel, cmake3, bash-completion
 BuildRequires:	libcaca-devel
 BuildRequires:	wget
 
@@ -88,6 +104,11 @@ install -m 644 %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/systemd/system
 
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/default
 echo "SCL_PHP_WRAPPER=/usr/bin/scl enable rh-%{phprpm}" > $RPM_BUILD_ROOT%{_sysconfdir}/default/misp-workers
+# patch app/Model/Server.php to show commit ID
+patch --ignore-whitespace -p0 < %{PATCH0}
+
+# create python3 virtualenv
+/var/www/cgi-bin/misp-python/bin/python3 -m venv --copies $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv
 
 mkdir -p $RPM_BUILD_ROOT/usr/share/httpd/.cache
 
@@ -135,10 +156,24 @@ pushd $RPM_BUILD_ROOT/var/www/MISP/app
 	sed -i composer.json -e 's/"php": ">=7.4.0,<8.0.0",/"php": ">=7.3.0,<8.0.0",/g'
 	/opt/rh/rh-%{phprpm}/root/usr/bin/php composer.phar install
 popd
+cd $RPM_BUILD_ROOT/var/www/MISP/app
+/opt/remi/php74/root/usr/bin/php composer.phar install
+/opt/remi/php74/root/usr/bin/php composer.phar require supervisorphp/supervisor:^4.0 guzzlehttp/guzzle php-http/message lstrojny/fxmlrpc
 
 cd $RPM_BUILD_ROOT/var/www/MISP
 # save commit ID of this installation
 git rev-parse HEAD > .git_commit_version
+
+# clean up before PATH rewriting
+rm -rf $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/__pycache__
+
+# rewrite PATH in virtualenv
+sed -e "s/\/usr\/local\/bin\/python3.9/\/var\/www\/cgi-bin\/misp-virtualenv\/bin\/python3/g" -i $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/*
+sed -e "s/\/builddir\/build\/BUILDROOT\/%{name}-%{version}-%{release}.%{_arch}//g" -i $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/bin/*
+sed -e "s/\/builddir\/build\/BUILDROOT\/%{name}-%{version}-%{release}.%{_arch}//g" -i $RPM_BUILD_ROOT/var/www/cgi-bin/misp-virtualenv/lib/python3.9/site-packages/pymisp-%{pymispver}.dist-info/direct_url.json
+
+# path fix for python3
+pathfix.py -pni "%{__python3} %{py3_shbang_opts}" . $RPM_BUILD_ROOT/var/www/MISP/*
 
 # cleanup
 find $RPM_BUILD_ROOT/var/www/ \
@@ -150,7 +185,8 @@ find $RPM_BUILD_ROOT/var/www/ \
 	-print0 | xargs -0 rm -rf
 
 chmod g+w $RPM_BUILD_ROOT/var/www/MISP/app/Config
-
+mkdir -p $RPM_BUILD_ROOT/etc/supervisord.d
+install -m 644 %{SOURCE7} $RPM_BUILD_ROOT/etc/supervisord.d
 %files python-virtualenv
 %defattr(-,apache,apache,-)
 /var/www/cgi-bin/misp-virtualenv
@@ -159,6 +195,10 @@ chmod g+w $RPM_BUILD_ROOT/var/www/MISP/app/Config
 %defattr(-,apache,apache,-)
 %config(noreplace) /var/www/MISP/app/Plugin/CakeResque/Config/config.php
 /var/www/MISP
+%config(noreplace) /etc/httpd/conf.d/misp.conf
+%config(noreplace) /etc/supervisord.d/misp-workers.ini
+/usr/share/MISP/policy/selinux/misp-*.pp
+%{_sysconfdir}/systemd/system/misp-workers.service
 %defattr(-,root,root,-)
 /usr/share/MISP/policy/selinux/misp-*.pp
 %{_sysconfdir}/default/misp-workers
@@ -199,6 +239,7 @@ restorecon -v '/var/www/MISP/app/Plugin/CakeResque/Config/config.php'
 semodule -i /usr/share/MISP/policy/selinux/misp-httpd.pp
 semodule -i /usr/share/MISP/policy/selinux/misp-bash.pp
 semodule -i /usr/share/MISP/policy/selinux/misp-ps.pp
+systemctl restart supervisor
 
 %changelog
 * Thu Feb 6 2025 Andreas Muehlemann <amuehlem@gmail.com> - 2.4.204
@@ -248,6 +289,32 @@ semodule -i /usr/share/MISP/policy/selinux/misp-ps.pp
 
 * Thu May 12 2022 Rémi Laurent <remi.laurent@securitymadein.lu> - 2.4.155
 - update to 2.4.155 and RHEL 7.9 packaging without external repos
+* Tue Apr 26 2022 Andreas Muehlemann <andreas.muehlemann@switch.ch> - 2.4.158
+- update to 2.4.158
+
+* Fri Mar 25 2022 Andreas Muehlemann <andreas.muehlemann@switch.ch> - 2.4.157
+- udpate to 2.4.157
+
+* Sun Mar 20 2022 Andreas Muehlemann <andreas.muehlemann@switch.ch> - 2.4.156
+- update to 2.4.156
+
+* Fri Mar 4 2022 Andreas Muehlemann <andreas.muehlemann@switch.ch> - 2.4.155
+- update to 2.4.155
+- added requirement for misp-python, because of pymisp needing python >= 3.7
+
+* Mon Feb 7 2022 Andreas Muehlemann <andreas.muehlemann@switch.ch> - 2.4.153
+- update to 2.4.153
+- added supervisor for background tasks
+- added php-apcu and php-process as requirements
+ 
+* Mon Jan 10 2022 Andreas Muehlemann <andreas.muehlemann@switch.ch> - 2.4.152
+- new build to solve MISP issues #8057
+
+* Mon Dec 27 2021 Andreas Muehlemann <andreas.muehlemann@switch.ch> - 2.4.152
+- update to 2.4.152
+
+* Thu Dec 02 2021 Andreas Muehlemann <andreas.muehlemann@switch.ch> - 2.4.151
+- update to 2.4.151
 
 * Thu Oct 14 2021 Andreas Muehlemann <andreas.muehlemann@switch.ch> - 2.4.150
 - update to 2.4.150
@@ -258,7 +325,7 @@ semodule -i /usr/share/MISP/policy/selinux/misp-ps.pp
 * Wed Aug 11 2021 Andreas Muehlemann <andreas.muehlemann@switch.ch> - 2.4.148
 - update to 2.4.148
 
-* Tue Jul 28 2021 Andreas Muehlemann <andreas.muehlemann@switch.ch> - 2.4.147
+* Wed Jul 28 2021 Andreas Muehlemann <andreas.muehlemann@switch.ch> - 2.4.147
 - update to 2.4.147
 
 * Tue Jul 6 2021 Andreas Muehlemann <andreas.muehlemann@switch.ch> - 2.4.146

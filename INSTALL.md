@@ -18,10 +18,15 @@ sudo yum install -y ca-certificates
 
 ## Install Apache webserver - httpd24
 
+<<<<<<< HEAD
 ```bash
 sudo yum install -y httpd24 httpd24-mod_ssl
 sudo systemctl enable httpd24-httpd
 sudo systemctl restart httpd24-httpd
+=======
+```
+yum install misp misp-python-virtualenv misp-modules
+>>>>>>> history
 ```
 
 ## Install PHP - rh-php73
