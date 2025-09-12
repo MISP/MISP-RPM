@@ -6,15 +6,22 @@ If you want to use a full fletched MISP version with all available features like
 
 ## Install
 
-See [INSTALL9.md](INSTALL9.md) for this specific RPM install on RedHat and refer
+See [INSTALL.md](INSTALL.md) for this specific RPM install on RedHat and refer
 to upstream MISP documentation for anything MISP related and/or upgrade paths.
 
-## Reporting issues
+**As RHEL8 is officially end of life, we recommend to upgrade to RHEL9 or RHEL10**
 
-Please report issues on this branch to https://github.com/MISP/MISP-RPM and not
-to the original developers.
+## Reporting issues
+Any issues regarding setting up a MISP instance using this RPMs, can be reported here.
+
+Issues with [MISP](https://github.com/MISP/MISP/) itself (application problems unrelated to the RPM) should be reported to the original developers.
 
 ## History
+### Sep 12
+- cleaning up branches and simplifying the SPECS
+ - the master branch is used to create RPMS for RHEL8/9/10
+ - the rhel79 branch is just to keep the history for RHEL7
+
 ### Sep 2
 - releas 2.5.20-el9
 - renaming misp-php82-* packages to misp-php-* (this simplifies the build process to create this RPMs)
