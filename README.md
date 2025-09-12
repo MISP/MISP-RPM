@@ -1,6 +1,6 @@
 # MISP-RPM
 
-This RPMs work with a clean Red Hat installation. There are no external repositories like EPEL, Remi PHP or others needed. They only rely on optional official RHEL repositories and software collections - you'll obviously need a valid RedHat subscription attached.
+This RPMs work with a clean Red Hat installation. There are no external repositories like EPEL, Remi PHP or others needed. They only rely on optional official RHEL repositories and software collections - you'll obviously need a valid RedHat subscription attached. Due to external dependencies in [MISP-Modules](https://github.com/MISP/misp-modules) this project can't control, we'll not provide a RPM for the modules. Just a single MISP instance is provided.
 
 If you want to use a full fletched MISP version with all available features like misp-modules, see [https://github.com/amuehlem/MISP-RPM/](https://github.com/amuehlem/MISP-RPM/). For this installation you'll need additional external repositories like EPEL and Remi PHP.
 
