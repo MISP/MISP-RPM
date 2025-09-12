@@ -36,7 +36,7 @@ sudo dnf install -y gtcaca-*.rpm libcaca*.rpm
 sudo dnf install -y faup-*.rpm
 sudo dnf install -y ssdeep-libs*.rpm
 sudo dnf install -y libbrotli*.rpm
-sudo dnf install -y misp-php82-*rpm
+sudo dnf install -y misp-php-*rpm
 sudo dnf install php-mysqlnd
 
 # install misp rpm
