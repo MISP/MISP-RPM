@@ -1,28 +1,30 @@
 %global php_inidir  %{_sysconfdir}/php.d
-%global pecl_name   brotli
+%global pecl_name   rdkafka
 %global pecl_xmldir /var/lib/pear/pkgxml
 %global php_extdir /usr/lib64/php/modules/
 
-Name:       misp-php82-pecl-brotli
-Version:    0.14.2
+Name:       misp-php-pecl-rdkafka
+Version:    5.0.2
 Release:    1%{?dist}
-Summary:    PHP extension for interfacing brotli
+Summary:    PHP extension for interfacing rdkafka
+
+Obsoletes:	misp-php82-pecl-rdkafka = 5.0.2
 
 Group:      Development/Languages
 License:    PHP
-URL:        https://github.com/phpbrotli/phpbrotli/
-Source0:    https://pecl.php.net/get/brotli-%{version}.tgz
+URL:        https://github.com/phprdkafka/phprdkafka/
+Source0:    https://pecl.php.net/get/rdkafka-%{version}.tgz
 
 BuildRequires:  php, php-devel
 BuildRequires: 	php-cli, php-pear
-BuildRequires:	brotli, brotli-devel
+BuildRequires:	librdkafka librdkafka-devel
 Requires:       php
 
 %description
-PHP extension for interfacing brotli
+PHP extension for interfacing rdkafka
 
 %prep
-%setup -q -n brotli-%{version}
+%setup -q -n rdkafka-%{version}
 
 # create the ini file
 cat > %{pecl_name}.ini << EOF
@@ -30,10 +32,9 @@ extension=%{pecl_name}.so
 EOF
 
 %build
-# brotli hard codes /usr/lib for libfuzzy.so
 phpize
-./configure \
-    --with-brotli \
+%configure \
+    --enable-rdkafka \
     --with-php-config=/usr/bin/php-config
 make %{?_smp_mflags}
 
@@ -46,5 +47,8 @@ install -D -m 644 %{pecl_name}.ini %{buildroot}/etc/php.d/%{pecl_name}.ini
 %config(noreplace) /etc/php.d/%{pecl_name}.ini
 
 %changelog
+* Sat Aug 30 2025 Andreas Muehlemann <amuehlem@gmail.com> - 1.2.2
+- renaming the package
+
 * Tue Feb 4 2025 Andreas Muehlemann <amuehlem@gmail.com> - 5.3.7
 - first version for rh-php74

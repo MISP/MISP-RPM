@@ -3,10 +3,12 @@
 %global pecl_xmldir /var/lib/pear/pkgxml
 %global php_extdir /usr/lib64/php/modules/
 
-Name:       misp-php82-pecl-redis
+Name:       misp-php-pecl-redis
 Version:    5.3.7
 Release:    1%{?dist}
 Summary:    PHP extension for interfacing redis
+
+Obsoletes:	misp-php82-pecl-redis = 5.3.7
 
 Group:      Development/Languages
 License:    PHP
@@ -45,5 +47,8 @@ install -D -m 644 %{pecl_name}.ini %{buildroot}/etc/php.d/%{pecl_name}.ini
 %config(noreplace) /etc/php.d/%{pecl_name}.ini
 
 %changelog
+* Sat Aug 30 2025 Andreas Muehlemann <amuehlem@gmail.com> - 1.2.2
+- renaming the package
+
 * Tue Feb 4 2025 Andreas Muehlemann <amuehlem@gmail.com> - 5.3.7
 - first version for rhel8
