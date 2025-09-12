@@ -97,7 +97,7 @@ mariadb -u misp -p misp < /var/www/MISP/INSTALL/MYSQL.sql
 
 ```
 systemctl enable --now mariadb
-systemctl enable --now redis [RHEL10: valkey]
+systemctl enable --now redis #RHEL10: use 'valkey' instead of 'redis'
 systemctl enable --now php-fpm
 systemctl enable --now httpd
 systemctl enable --now misp-workers
