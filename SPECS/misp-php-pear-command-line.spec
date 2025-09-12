@@ -1,14 +1,16 @@
 %global php_inidir  %{_sysconfdir}/php.d
 %global pear_name  Console_CommandLine
 
-Name:       misp-php82-pear-command-line
+Name:       misp-php-pear-command-line
 Version:    1.2.2
 Release:    1%{?dist}
 Summary:    A full featured command line options and arguments parser
 
+Obsoletes:	misp-php82-pear-command-line = 1.2.2
+
 Group:      Development/Languages
 License:    PHP
-URL:        https://github.com/phpcrypt-gpg/phpcrypt-gpg/
+URL:        https://pear.php.net/package/Console_CommandLine
 Source0:    http://download.pear.php.net/get/%{pear_name}-%{version}.tgz
 
 BuildArch:	noarch
@@ -53,5 +55,8 @@ pear -d php_dir=/usr/share/pear install --nodeps --packagingroot $RPM_BUILD_ROOT
 %exclude /var/lib/pear/.lock
 
 %changelog
+* Sat Aug 30 2025 Andreas Muehlemann <amuehlem@gmail.com> - 1.2.2
+- renaming the package
+
 * Tue Feb 4 2025 Andreas Muehlemann <amuehlem@gmail.com> - 1.2.2
 - first version for RHEL8

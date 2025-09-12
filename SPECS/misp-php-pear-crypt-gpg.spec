@@ -1,10 +1,12 @@
 %global php_inidir  %{_sysconfdir}/php.d
 %global pear_name   Crypt_GPG
 
-Name:       misp-php82-pear-crypt-gpg
+Name:       misp-php-pear-crypt-gpg
 Version:    1.6.7
 Release:    1%{?dist}
 Summary:    PHP extension for interfacing crypt-gpg
+
+Obsoletes:	misp-php82-pear-crypt-gpg = 1.6.7
 
 Group:      Development/Languages
 License:    PHP
@@ -45,5 +47,8 @@ pear -d php_dir=/usr/share/pear install --nodeps --packagingroot $RPM_BUILD_ROOT
 %exclude /tmp/Crypt
 
 %changelog
+* Sat Aug 30 2025 Andreas Muehlemann <amuehlem@gmail.com> - 1.2.2
+- renaming the package
+
 * Tue Feb 4 2025 Andreas Muehlemann <amuehlem@gmail.com> - 5.3.7
 - first version for RHEL8
