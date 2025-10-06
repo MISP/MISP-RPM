@@ -17,6 +17,9 @@ Any issues regarding setting up a MISP instance using this RPMs, can be reported
 Issues with [MISP](https://github.com/MISP/MISP/) itself (application problems unrelated to the RPM) should be reported to the original developers.
 
 ## History
+### Oct 6
+- version 2.5.22 for RHEL8/9/10
+
 ### Sep 12
 - cleaning up branches and simplifying the SPECS
  - the master branch is used to create RPMS for RHEL8/9/10
