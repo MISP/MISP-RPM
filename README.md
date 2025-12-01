@@ -17,6 +17,12 @@ Any issues regarding setting up a MISP instance using this RPMs, can be reported
 Issues with [MISP](https://github.com/MISP/MISP/) itself (application problems unrelated to the RPM) should be reported to the original developers.
 
 ## History
+### Dec 1
+- misp 2.5.27
+
+### Nov 20
+- misp 2.5.26
+
 ### Nov 14
 - version 2.5.25 for RHEL8/9/10
 
