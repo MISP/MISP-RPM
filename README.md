@@ -17,6 +17,9 @@ Any issues regarding setting up a MISP instance using this RPMs, can be reported
 Issues with [MISP](https://github.com/MISP/MISP/) itself (application problems unrelated to the RPM) should be reported to the original developers.
 
 ## History
+### Apr 4 2026
+- misp-2.5.36
+
 ### Mar 23 2026
 - misp-2.5.35
 
