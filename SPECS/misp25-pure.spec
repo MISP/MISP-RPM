@@ -12,7 +12,7 @@
 
 # global definitions
 %define pymispver 2.5.34.1
-%define mispstixver 2026.4.9
+%define mispstixver 2026.5.20
 
 # RHEL version dependencies
 %define phpver 83
@@ -39,8 +39,8 @@
 %endif
 
 Name:		misp
-Version:	2.5.37
-Release: 	1%{?dist}
+Version:	2.5.38
+Release: 	2%{?dist}
 Summary:	MISP - malware information sharing platform
 
 Group:		Internet Applications
@@ -56,7 +56,6 @@ Source7:        misp-workers.ini
 Source8:        misp-workers8.pp
 Source9:        misp-worker-status-supervisord.pp
 Patch0:         MISP-AppModel.php.patch
-Patch1:         misp-2.4.177-fix-composer-config.patch
 
 BuildRequires:	git, %{pythonvershort}-devel, %{pythonvershort}-pip
 BuildRequires:	libxslt-devel, zlib-devel
@@ -113,9 +112,6 @@ git config core.filemode false
 
 # patch app/Model/Server.php to show commit ID
 patch --ignore-whitespace -p0 < %{PATCH0}
-
-# patch app/composer.json
-patch --ignore-whitespace -p0 < %{PATCH1}
 
 %build
 #intentionally left blank
