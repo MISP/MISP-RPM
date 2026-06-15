@@ -12,7 +12,7 @@
 
 # global definitions
 %define pymispver 2.5.34.1
-%define mispstixver 2026.6.3
+%define mispstixver 2026.6.9
 
 # RHEL version dependencies
 %define phpver 83
@@ -39,7 +39,7 @@
 %endif
 
 Name:		misp
-Version:	2.5.39
+Version:	2.5.40
 Release: 	1%{?dist}
 Summary:	MISP - malware information sharing platform
 
@@ -295,6 +295,9 @@ if [ SELINUXSTATUS != 'Disabled' ]; then
 fi
 
 %changelog
+* Fri Jun 12 2026 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.40
+- update to 2.5.40
+
 * Thu Jun 4 2026 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.39
 - update to 2.5.39
 
