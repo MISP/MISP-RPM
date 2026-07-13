@@ -12,7 +12,7 @@
 
 # global definitions
 %define pymispver 2.5.34.1
-%define mispstixver 2026.6.9
+%define mispstixver 2026.7.8
 
 # RHEL version dependencies
 %define phpver 83
@@ -39,7 +39,7 @@
 %endif
 
 Name:		misp
-Version:	2.5.42
+Version:	2.5.43
 Release: 	1%{?dist}
 Summary:	MISP - malware information sharing platform
 
@@ -47,15 +47,15 @@ Group:		Internet Applications
 License:	GPLv3
 URL:		http://www.misp-project.org/
 Source1:	misp.conf
-Source2:        misp-httpd.pp
-Source3:        misp-bash.pp
-Source4:        misp-ps.pp
-Source5:        misp-workers.service
-Source6:        start-misp-workers.sh
-Source7:        misp-workers.ini
-Source8:        misp-workers8.pp
-Source9:        misp-worker-status-supervisord.pp
-Patch0:         MISP-AppModel.php.patch
+Source2:    misp-httpd.pp
+Source3:    misp-bash.pp
+Source4:    misp-ps.pp
+Source5:    misp-workers.service
+Source6:    start-misp-workers.sh
+Source7:    misp-workers.ini
+Source8:    misp-workers8.pp
+Source9:    misp-worker-status-supervisord.pp
+Patch0:     MISP-AppModel.php.patch
 
 BuildRequires:	git, %{pythonvershort}-devel, %{pythonvershort}-pip
 BuildRequires:	libxslt-devel, zlib-devel
@@ -295,6 +295,9 @@ if [ SELINUXSTATUS != 'Disabled' ]; then
 fi
 
 %changelog
+* Thu Jul 9 2026 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.43
+- update to 2.5.43
+
 * Mon Jun 22 2026 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.42
 - update to 2.5.42
 
