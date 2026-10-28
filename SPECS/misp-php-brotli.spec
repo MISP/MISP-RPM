@@ -10,6 +10,7 @@ Release:    1%{?dist}
 Summary:    PHP extension for interfacing brotli
 
 Obsoletes:	misp-php82-pecl-brotli < 0.15
+Conflicts:	misp-php82-pecl-brotli < 0.15
 
 Group:      Development/Languages
 License:    MIT 

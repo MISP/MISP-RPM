@@ -9,6 +9,7 @@ Release:    1%{?dist}
 Summary:    PHP extension for interfacing redis
 
 Obsoletes:	misp-php82-pecl-redis = 5.3.7
+Conflicts:	misp-php82-pecl-redis = 5.3.7
 
 Group:      Development/Languages
 License:    PHP
