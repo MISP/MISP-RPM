@@ -2,11 +2,12 @@
 %global pear_name   Crypt_GPG
 
 Name:       misp-php-pear-crypt-gpg
-Version:    1.6.7
+Version:    1.6.11
 Release:    1%{?dist}
 Summary:    PHP extension for interfacing crypt-gpg
 
-Obsoletes:	misp-php82-pear-crypt-gpg = 1.6.7
+Obsoletes:	misp-php82-pear-crypt-gpg  < 1.6.11
+Conflicts:  misp-php82-pear-crypt-gpg  < 1.6.11
 
 Group:      Development/Languages
 License:    PHP
@@ -16,8 +17,8 @@ Source0:    http://download.pear.php.net/get/%{pear_name}-%{version}.tgz
 BuildArch:	noarch
 
 BuildRequires:  php, php-devel
-BuildRequires:	php-cli, php-pear
-Requires:       php, php-pear
+BuildRequires:	php-cli, php-pear(PEAR)
+Requires:       php, php-pear(PEAR)
 
 %description
 PHP extension for interfacing crypt-gpg
@@ -25,12 +26,12 @@ PHP extension for interfacing crypt-gpg
 %prep
 %setup -q -c
 cd %{pear_name}-%{version}
-mv ../package.xml %{pear_name}.xml
 
 %build
 cd %{pear_name}-%{version}
 
 %install
+cd %{pear_name}-%{version}
 pear -d php_dir=/usr/share/pear install --nodeps --packagingroot $RPM_BUILD_ROOT %{pear_name}-%{version}.tgz
 
 %files
@@ -47,8 +48,5 @@ pear -d php_dir=/usr/share/pear install --nodeps --packagingroot $RPM_BUILD_ROOT
 %exclude /tmp/Crypt
 
 %changelog
-* Sat Aug 30 2025 Andreas Muehlemann <amuehlem@gmail.com> - 1.2.2
-- renaming the package
-
-* Tue Feb 4 2025 Andreas Muehlemann <amuehlem@gmail.com> - 5.3.7
-- first version for RHEL8
+* Wed Oct 28 2026 Andreas Muehlemann <amuehlem@gmail.com> - 1.6.11
+- update to 1.6.11
