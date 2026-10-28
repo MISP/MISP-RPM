@@ -72,13 +72,13 @@ BuildRequires:  /usr/bin/pathfix.py
 
 Requires:       httpd, mod_ssl, libxslt, zlib
 Requires:       mariadb, mariadb-server
-Requires:	(php or php-fpm)
+Requires:	    (php or php-fpm)
 Requires:       php-cli, php-gd, php-pdo
 Requires:       php-mysqlnd, php-mbstring, php-xml
 Requires:       php-bcmath, php-opcache, php-json
 Requires:       php-pecl-zip, php-intl
-Requires:       misp-php-pecl-ssdeep, php-process
-Requires:       php-pecl-apcu, misp-php-pecl-brotli, misp-php-pecl-rdkafka
+Requires:       misp-php-ssdeep, misp-php-redis, php-process
+Requires:       php-pecl-apcu, misp-php-brotli, misp-php-rdkafka
 Requires:       misp-php-pear-crypt-gpg, misp-php-pear-command-line
 
 # redis / valkey depending on rhel version
