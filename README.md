@@ -1,6 +1,6 @@
 # MISP-RPM
 
-This project will deliver you with a simple and reproducable way to install [MISP](https://github.com/MISP/MISP) on a Red Hat based system. Each release will contain a specific version of the software and will give you reproducable installations on dev, test, acceptance or prod systems.
+This project will deliver you with a simple and reproducible way to install [MISP](https://github.com/MISP/MISP) on a Red Hat based system. Each release will contain a specific version of the software and will give you reproducible installations on dev, test, acceptance or prod systems.
 
 # Two flavors
 
@@ -21,8 +21,8 @@ to upstream MISP documentation for anything MISP related and/or upgrade paths.
 
 
 ## Full MISP installation with modules
-If you want to use a full fletched MISP version with all available features like misp-modules, you can use the 2nd flavor of RPMs. You'll need to use EPEL, Remi PHP and other external repositories to solve dependency issues.
-see [https://github.com/amuehlem/MISP-RPM/](https://github.com/amuehlem/MISP-RPM/). For this installation you'll need additional external repositories like EPEL and Remi PHP. The packages will be delivered through our own MISP repository.
+If you want to use a full-fledged MISP version with all available features like misp-modules, you can use the 2nd flavor of RPMs. You'll need to use EPEL, Remi PHP and other external repositories to solve dependency issues.
+The packages will be delivered through our own MISP repository.
 
 ### Installtion
 
