@@ -72,7 +72,7 @@ BuildRequires:  /usr/bin/pathfix.py
 
 Requires:       httpd, mod_ssl, libxslt, zlib
 Requires:       mariadb, mariadb-server
-Requires:	    (php or php-fpm)
+Requires:       (php or php-fpm)
 Requires:       php-cli, php-gd, php-pdo
 Requires:       php-mysqlnd, php-mbstring, php-xml
 Requires:       php-bcmath, php-opcache, php-json

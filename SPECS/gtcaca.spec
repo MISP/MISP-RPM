@@ -1,15 +1,18 @@
 %define cmake cmake3 -DCMAKE_INSTALL_PREFIX:PATH=/usr
 
 Name:		gtcaca
-Version:	0+gitb05ed3c
-Release:	3%{?dist}
-Summary:    	some widgets for libcaca
-License:    	Public
+Version:	0.2.7
+Release:	1%{?dist}
+Summary:    some widgets for libcaca
+License:    Public
 
 Group:		Development/Languages
 URL:		https://github.com/stricaud/gtcaca/
 
 BuildRequires: cmake3, libcaca-devel, git
+BuildRequires: imlib2-devel, libcaca
+BuildRequires: svt-av1-libs-devel, libaom-devel
+BuildRequires: libdav1d-devel, rav1e-libs-devel
 Requires: libcaca
 
 %description
@@ -57,6 +60,9 @@ cd gtcaca/build/
 /usr/include/gtcaca/window.h
 
 %changelog
+* Thu Oct 29 2026 Andreas Muehlemann <amuehlem@gmail.com> - 0.2.7
+- update to 0.2.7
+
 * Wed Nov 15 2023 Andreas Muehleamnn <andreas.muehlemann@switch.ch>
 - removing cppcheck requirement
 
