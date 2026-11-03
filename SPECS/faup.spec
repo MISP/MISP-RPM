@@ -2,15 +2,14 @@
 
 Name:		faup
 Version:	1.6
-Release:	2%{?dist}
-Summary:    	Fast URL decoder library
-License:    	Public
+Release:	3%{?dist}
+Summary:    Fast URL decoder library
+License:    Public
 
 Group:		Development/Languages
 URL:		https://github.com/stricaud/faup/
 
-BuildRequires: cmake3, gtcaca-devel, git
-Requires: gtcaca
+BuildRequires: cmake3, git
 
 %description
 Fast URL decoder library https://github.com/stricaud/faup/
@@ -58,6 +57,9 @@ cd faup/build/
 /usr/include/faup/*.h
 
 %changelog
+* Thu Oct 29 2026 Andreas Muehlemann <amuehlem@gmail.com> - 1.6-3
+- update to 1.6-3
+
 * Tue Jun 27 2023 Andreas Muehlemann <andreas.muehlemann@switch.ch>
 - simplified source and setup routine
 
