@@ -1,7 +1,7 @@
 Name:       	misp-release	
 Version:	1.0
 Release:	1%{?dist}
-Summary:	configuration for MISP repositories for EL9
+Summary:	configuration for MISP repositories for EL10
 
 Group:		System Environment/Base
 License:	GPLv2
