@@ -37,14 +37,14 @@
 %endif
 
 Name:		misp-modules
-Version:	3.1.1
+Version:	3.1.3
 Release:	1%{?dist}
 Summary:	MISP modules for expansion services, import and export
 
 Group:		Development/Languages
 License:	GPLv3
 URL:		https://github.com/MISP/misp-modules
-Source1:    	misp-modules.service
+Source1:    misp-modules.service
 Source2:	misp-modules8.pp
 
 BuildRequires:  git, %{pythonvershort}-devel, %{pythonvershort}-pip
@@ -55,7 +55,7 @@ BuildRequires:	openjpeg2-devel
 BuildRequires:  /usr/bin/pathfix.py
 %endif
 
-Requires:       %{venvbasedir}/bin/python3, libSM
+Requires:   %{venvbasedir}/bin/python3, libSM
 Requires:	poppler-cpp, zbar
 
 # RHEL10 skipped 32bit support
@@ -124,8 +124,8 @@ find $RPM_BUILD_ROOT%{venvbasedir} -name ".git" -exec rm -rf "{}" \;
 semodule -i /usr/share/MISP-modules/policy/selinux/misp-modules8.pp
 
 %changelog
-* Tue Nov 3 2026 Andreas Muehlemann <amuehlem@gmail.com> - 3.1.2
-- update to 3.1.2
+* Tue Nov 3 2026 Andreas Muehlemann <amuehlem@gmail.com> - 3.1.3
+- update to 3.1.3 (3.1.2 had some issues)
 
 * Wed Oct 28 2026 Andreas Muehlemann <amuehlem@gmail.com> - 3.1.1
 - update to 3.1.1
