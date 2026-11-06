@@ -9,8 +9,8 @@ Version:    1.1.0
 Release:    2%{?dist}
 Summary:    PHP extension for interfacing ssdeep
 
-Obsoletes:	misp-php82-pecl-ssdeep = 1.1.0
-Conflicts:	misp-php82-pecl-ssdeep = 1.1.0
+Obsoletes:	misp-php-pecl-ssdeep = 1.1.0
+Conflicts:	misp-php-pecl-ssdeep = 1.1.0
 
 Group:      Development/Languages
 License:    PHP
