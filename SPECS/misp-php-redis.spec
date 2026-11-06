@@ -3,18 +3,19 @@
 %global pecl_xmldir /var/lib/pear/pkgxml
 %global php_extdir /usr/lib64/php/modules/
 
-Name:       misp-php-pecl-redis
-Version:    5.3.7
+Name:       misp-php-redis
+Version:    6.3.0
 Release:    1%{?dist}
 Summary:    PHP extension for interfacing redis
 
 Obsoletes:	misp-php82-pecl-redis = 5.3.7
+Conflicts:	misp-php82-pecl-redis = 5.3.7
 
 Group:      Development/Languages
 License:    PHP
 URL:        https://github.com/phpredis/phpredis/
-Source0:    https://pecl.php.net/get/redis-%{version}.tgz
 
+BuildRequires:  git
 BuildRequires:  php, php-devel
 BuildRequires: 	php-cli, php-pear
 Requires:       php
@@ -23,22 +24,27 @@ Requires:       php
 PHP extension for interfacing redis
 
 %prep
-%setup -q -n redis-%{version}
+%setup -qTc
+git clone https://github.com/phpredis/phpredis.git
+
+%build
+cd phpredis
+phpize
+%configure \
+    --enable-redis \
+    --enable-redis-session \
+    --with-php-config=/usr/bin/php-config \
+    --with-libdir=%{_lib}
+
+make %{?_smp_mflags}
 
 # create the ini file
 cat > %{pecl_name}.ini << EOF
 extension=%{pecl_name}.so
 EOF
 
-%build
-phpize
-%configure \
-    --enable-redis \
-    --enable-redis-session \
-    --with-php-config=/usr/bin/php-config
-make %{?_smp_mflags}
-
 %install
+cd phpredis
 make install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{pecl_name}.ini %{buildroot}/etc/php.d/%{pecl_name}.ini
 
@@ -47,8 +53,7 @@ install -D -m 644 %{pecl_name}.ini %{buildroot}/etc/php.d/%{pecl_name}.ini
 %config(noreplace) /etc/php.d/%{pecl_name}.ini
 
 %changelog
-* Sat Aug 30 2025 Andreas Muehlemann <amuehlem@gmail.com> - 1.2.2
+* Wed Oct 28 2026 Andreas Muehlemann <amuehlem@gmail.com> - 6.3.0
 - renaming the package
+- update to 6.3.0
 
-* Tue Feb 4 2025 Andreas Muehlemann <amuehlem@gmail.com> - 5.3.7
-- first version for rhel8

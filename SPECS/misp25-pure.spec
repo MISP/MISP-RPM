@@ -11,8 +11,8 @@
 %global __requires_exclude ^/opt/python/cp3.*
 
 # global definitions
-%define pymispver 2.5.34.2
-%define mispstixver 2026.7.8
+%define pymispver 2.5.34.3
+%define mispstixver 2026.9.8
 
 # RHEL version dependencies
 %define phpver 83
@@ -39,7 +39,7 @@
 %endif
 
 Name:		misp
-Version:	2.5.45
+Version:	2.5.51
 Release: 	1%{?dist}
 Summary:	MISP - malware information sharing platform
 
@@ -72,13 +72,13 @@ BuildRequires:  /usr/bin/pathfix.py
 
 Requires:       httpd, mod_ssl, libxslt, zlib
 Requires:       mariadb, mariadb-server
-Requires:	(php or php-fpm)
+Requires:       (php or php-fpm)
 Requires:       php-cli, php-gd, php-pdo
 Requires:       php-mysqlnd, php-mbstring, php-xml
 Requires:       php-bcmath, php-opcache, php-json
 Requires:       php-pecl-zip, php-intl
-Requires:       misp-php-pecl-ssdeep, php-process
-Requires:       php-pecl-apcu, misp-php-pecl-brotli, misp-php-pecl-rdkafka
+Requires:       misp-php-ssdeep, misp-php-redis, php-process
+Requires:       php-pecl-apcu, misp-php-brotli, misp-php-rdkafka
 Requires:       misp-php-pear-crypt-gpg, misp-php-pear-command-line
 
 # redis / valkey depending on rhel version
@@ -295,6 +295,21 @@ if [ SELINUXSTATUS != 'Disabled' ]; then
 fi
 
 %changelog
+* Wed Nov 4 2026 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.51
+- update to 2.5.51
+
+* Sun Oct 11 2026 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.50
+- update to 2.5.50
+
+* Mon Sep 28 2026 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.48
+- update to 2.5.48
+
+* Thu Sep 17 2026 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.47
+- update to 2.5.47
+
+* Sat Sep 5 2026 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.46
+- update to 2.5.46
+
 * Wed Aug 26 2026 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.45
 - update to 2.5.45
 

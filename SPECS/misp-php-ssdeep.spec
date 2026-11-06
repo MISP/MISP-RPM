@@ -4,12 +4,13 @@
 %global php_extdir /usr/lib64/php/modules/
 %global __brp_check_rpaths %{nil}
 
-Name:       misp-php-pecl-ssdeep
+Name:       misp-php-ssdeep
 Version:    1.1.0
 Release:    2%{?dist}
 Summary:    PHP extension for interfacing ssdeep
 
-Obsoletes:	misp-php82-pecl-ssdeep = 1.1.0
+Obsoletes:	misp-php-pecl-ssdeep = 1.1.0
+Conflicts:	misp-php-pecl-ssdeep = 1.1.0
 
 Group:      Development/Languages
 License:    PHP
@@ -43,11 +44,6 @@ make %{?_smp_mflags}
 
 cd ../ssdeep-%{version}
 
-# create the ini file
-cat > %{pecl_name}.ini << EOF
-extension=%{pecl_name}.so
-EOF
-
 %build
 # patch for php8
 patch -p1 < %{PATCH0}
@@ -56,8 +52,15 @@ patch -p1 < %{PATCH0}
 phpize
 ./configure \
     --with-ssdeep=../ssdeep-2.14.1 \
-    --with-php-config=/usr/bin/php-config
+    --with-php-config=/usr/bin/php-config \
+    --with-libdir=%{_lib}
+
 make %{?_smp_mflags}
+
+# create the ini file
+cat > %{pecl_name}.ini << EOF
+extension=%{pecl_name}.so
+EOF
 
 %install
 make install INSTALL_ROOT=%{buildroot}
