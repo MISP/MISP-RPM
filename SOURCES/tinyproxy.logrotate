@@ -1,0 +1,11 @@
+/var/log/tinyproxy/tinyproxy.log {
+    daily
+    rotate 10
+    missingok
+    notifempty
+    compress
+    sharedscripts
+    postrotate
+        [ ! -f /var/run/tinyproxy/tinyproxy.pid ] || kill -HUP `cat /var/run/tinyproxy/tinyproxy.pid`
+    endscript
+}

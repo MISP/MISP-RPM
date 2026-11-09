@@ -1,0 +1,14 @@
+[Unit]
+Description=Startup script for the tinyproxy server
+After=network.target
+
+[Service]
+Type=forking
+PIDFile=/var/run/tinyproxy/tinyproxy.pid
+ExecStart=/usr/bin/tinyproxy -c /etc/tinyproxy/tinyproxy.conf
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
+
