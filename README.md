@@ -36,8 +36,9 @@ Any issues regarding setting up a MISP instance using the provided RPMs, can be 
 Issues with [MISP](https://github.com/MISP/MISP/) itself (application problems unrelated to the RPM) should be reported to the original developers.
 
 ## History
-### NOV XX 2026
-- Merging with [amuehlem/MISP-RPM](https://github.com/amuehlem/MISP-RPM/)
+### NOV 9 2026
+- Merging with [amuehlem/MISP-RPM](https://github.com/amuehlem/MISP-RPM/), we'll continue to provied all MISP-RPMs here.
+- misp-modules-3.1.4
 
 ### Oct 12 2026
 - misp-2.5.50 (2.5.49 was skipped in [MISP](https://www.github.com/MISP/MISP/)
