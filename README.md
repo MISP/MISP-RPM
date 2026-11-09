@@ -24,7 +24,7 @@ to upstream MISP documentation for anything MISP related and/or upgrade paths.
 If you want to use a full-fledged MISP version with all available features like misp-modules, you can use the 2nd flavor of RPMs. You'll need to use EPEL, Remi PHP and other external repositories to solve dependency issues.
 The packages will be delivered through our own MISP repository.
 
-### Installtion
+### Installation
 
 See [INSTALL_full.md](INSTALL_full.md) for the full installation with modules and external repositories. For more information about MISP, check the official upstream MISP documentation for anything MISP related and/or upgrade paths.
 
