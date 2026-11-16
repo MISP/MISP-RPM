@@ -37,7 +37,10 @@ Issues with [MISP](https://github.com/MISP/MISP/) itself (application problems u
 
 ## History
 
-### NOV 9 2026
+### Nov 16 2026
+- misp-modules-3.1.5
+
+### Nov 9 2026
 - Merging with [amuehlem/MISP-RPM](https://github.com/amuehlem/MISP-RPM/), we'll continue to provied all MISP-RPMs here.
 - misp-modules-3.1.4
 
