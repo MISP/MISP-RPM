@@ -11,7 +11,7 @@
 %global __requires_exclude ^/opt/python/cp3.*
 
 # global definitions
-%define pymispver 2.5.34.3
+%define pymispver 3.0.0
 %define mispstixver 2026.9.8
 
 # RHEL version dependencies
@@ -39,7 +39,7 @@
 %endif
 
 Name:		misp
-Version:	2.5.51
+Version:	2.5.52
 Release: 	1%{?dist}
 Summary:	MISP - malware information sharing platform
 
@@ -295,6 +295,9 @@ if [ SELINUXSTATUS != 'Disabled' ]; then
 fi
 
 %changelog
+* Thu Nov 19 2026 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.52
+- update to 2.5.52
+
 * Wed Nov 4 2026 Andreas Muehlemann <amuehlem@gmail.com> - 2.5.51
 - update to 2.5.51
 
