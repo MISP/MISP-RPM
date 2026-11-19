@@ -30,6 +30,8 @@ dnf module enable mariadb:10.11
 
 ## install provided RPMs
 
+check the [Releases](https://github.com/MISP/MISP-RPM/releases) for the version of your choice. All files can be downloaded from the corresponding release.
+
 ```
 # prereq for misp
 sudo dnf install -y gtcaca-*.rpm libcaca*.rpm
