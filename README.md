@@ -37,6 +37,10 @@ Issues with [MISP](https://github.com/MISP/MISP/) itself (application problems u
 
 ## History
 
+### Nov 24
+- misp-modules-3.1.6
+- misp-2.5.53
+
 ### Nov 19 2026
 - misp-2.5.52
 
